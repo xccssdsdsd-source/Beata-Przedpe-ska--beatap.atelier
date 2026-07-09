@@ -102,6 +102,11 @@
       backdrop-filter: blur(18px);
     }
 
+    .nav.is-scrolled .brand {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .nav__inner {
       display: flex;
       align-items: center;
@@ -110,6 +115,9 @@
     }
 
     .brand {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s var(--ease);
       font-family: "Cormorant Garamond", serif;
       font-size: 24px;
       font-weight: 600;
@@ -158,13 +166,22 @@
 
     .hero {
       position: relative;
-      display: grid;
       min-height: 100svh;
       overflow: hidden;
       isolation: isolate;
-      place-items: end start;
-      padding: 118px 0 58px;
       background: hsl(var(--bg));
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .hero__texture {
@@ -174,7 +191,7 @@
       width: 100%;
       height: 112%;
       object-fit: cover;
-      filter: saturate(.72) contrast(1.06) brightness(.58);
+      filter: saturate(.78) contrast(1.04) brightness(.8);
       transform: translateY(var(--parallax, 0));
     }
 
@@ -189,45 +206,71 @@
 
     .hero::before {
       background:
-        linear-gradient(90deg, hsl(var(--bg) / .92), hsl(var(--bg) / .54) 46%, transparent 76%),
-        linear-gradient(0deg, hsl(var(--bg) / .88), transparent 44%);
+        linear-gradient(90deg, hsl(var(--bg) / .64), hsl(var(--bg) / .3) 46%, transparent 76%),
+        linear-gradient(0deg, hsl(var(--bg) / .56), transparent 44%);
     }
 
     .hero::after {
-      opacity: .42;
+      opacity: .3;
       background: radial-gradient(circle at 78% 14%, hsl(var(--accent) / .26), transparent 28rem);
       mix-blend-mode: soft-light;
     }
 
-    .hero__content {
-      position: relative;
-      display: block;
+    .hero__inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+    }
+
+    .hero__brand {
+      position: absolute;
+      top: clamp(26px, 5vw, 42px);
+      left: clamp(24px, 4.4vw, 48px);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
     .hero__mark {
-      width: clamp(82px, 14vw, 164px);
+      width: clamp(40px, 4.6vw, 54px);
       aspect-ratio: 1;
-      border: 1px solid hsl(var(--line) / .12);
+      border: 1px solid hsl(var(--line) / .18);
       object-fit: cover;
     }
 
-    .eyebrow {
-      margin: 0 0 18px;
-      color: hsl(var(--muted));
-      font-size: 11px;
+    .hero__brand-name {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(17px, 1.9vw, 21px);
       font-weight: 600;
-      letter-spacing: .2em;
-      text-transform: uppercase;
+      letter-spacing: .02em;
+      color: hsl(var(--text));
     }
 
-    .eyebrow.is-typing::after {
+    .hero__eyebrow {
+      max-width: 920px;
+      margin: 0;
+      color: hsl(var(--text));
+      text-align: center;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(36px, 6.4vw, 82px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: 0;
+      text-shadow: 0 6px 34px hsl(var(--bg) / .6);
+    }
+
+    .hero__eyebrow.is-typing::after {
       content: '';
       display: inline-block;
-      width: 1px;
-      height: .9em;
-      margin-left: 2px;
+      width: 2px;
+      height: .78em;
+      margin-left: 4px;
       background: currentColor;
-      vertical-align: -0.1em;
+      vertical-align: -0.08em;
       animation: blink-cursor .8s steps(1) infinite;
     }
 
@@ -268,35 +311,9 @@
       line-height: 1.45;
     }
 
-    .hero__side {
-      position: absolute;
-      right: 0;
-      bottom: 8px;
-      display: grid;
-      align-content: end;
-      justify-items: start;
-      gap: 26px;
-      padding-bottom: 0;
-    }
-
-    .scroll-cue {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: hsl(var(--muted));
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .17em;
-      text-transform: uppercase;
-    }
-
-    .scroll-cue::before {
-      width: 42px;
-      height: 1px;
-      content: "";
-      background: hsl(var(--muted) / .62);
-      transform-origin: left;
-      animation: cue 2.8s var(--ease) infinite;
+    .placeholder-copy {
+      filter: blur(6px);
+      user-select: none;
     }
 
     .section {
@@ -395,49 +412,10 @@
       transition: transform .9s var(--ease), filter .9s var(--ease);
     }
 
-    .work::after {
-      position: absolute;
-      inset: 0;
-      content: "";
-      opacity: 0;
-      background: linear-gradient(180deg, transparent 38%, hsl(var(--bg) / .78));
-      transition: opacity .5s var(--ease);
-    }
-
-    .work__meta {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 16px;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity .45s var(--ease), transform .45s var(--ease);
-    }
-
-    .work__meta span {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .13em;
-      text-align: left;
-      text-transform: uppercase;
-    }
-
     .work:hover img,
     .work:focus-visible img {
       filter: saturate(.9) brightness(1.05);
       transform: scale(1.035);
-    }
-
-    .work:hover::after,
-    .work:focus-visible::after,
-    .work:hover .work__meta,
-    .work:focus-visible .work__meta {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .commission {
@@ -477,17 +455,11 @@
       font-size: 14px;
     }
 
-    .contact {
-      display: grid;
-      min-height: 72svh;
-      align-items: end;
-    }
-
     .contact__grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, .48fr);
-      align-items: end;
-      gap: clamp(36px, 7vw, 96px);
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, .58fr);
+      align-items: start;
+      gap: clamp(40px, 7vw, 100px);
     }
 
     .contact__copy {
@@ -495,6 +467,77 @@
       margin: 26px 0 0;
       color: hsl(var(--muted));
       font-size: clamp(17px, 1.7vw, 22px);
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 22px;
+      max-width: 560px;
+      margin-top: 42px;
+    }
+
+    .contact-form__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      color: hsl(var(--muted));
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 12px 2px;
+      border: 0;
+      border-bottom: 1px solid hsl(var(--line) / .2);
+      background: transparent;
+      color: hsl(var(--text));
+      font: inherit;
+      font-size: 15px;
+      resize: vertical;
+      transition: border-color .28s var(--ease);
+    }
+
+    .field textarea {
+      min-height: 118px;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: hsl(var(--muted) / .6);
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: hsl(var(--accent));
+    }
+
+    .contact-form__submit {
+      justify-self: start;
+      margin-top: 4px;
+      cursor: pointer;
+    }
+
+    .contact-form__note {
+      margin: 0;
+      color: hsl(var(--muted));
+      font-size: 12px;
+      letter-spacing: .02em;
+    }
+
+    .contact-form__note[hidden] {
+      display: none;
     }
 
     .button {
@@ -521,18 +564,48 @@
 
     .contact__details {
       display: grid;
-      gap: 18px;
+      gap: 26px;
+      align-content: start;
       color: hsl(var(--muted));
       font-size: 13px;
     }
 
-    .contact__details a {
-      color: hsl(var(--text));
-      transition: color .28s var(--ease);
+    .contact__details-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
     }
 
-    .contact__details a:hover {
-      color: hsl(var(--accent));
+    .social-links {
+      display: grid;
+      gap: 14px;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 18px;
+      border: 1px solid hsl(var(--line) / .13);
+      background: hsl(var(--line) / .03);
+      color: hsl(var(--text));
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .03em;
+      transition: transform .28s var(--ease), background-color .28s var(--ease), border-color .28s var(--ease);
+    }
+
+    .social-link svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .social-link:hover {
+      transform: translateY(-2px);
+      border-color: hsl(var(--accent) / .5);
+      background: hsl(var(--line) / .09);
     }
 
     .footer {
@@ -571,8 +644,7 @@
       pointer-events: auto;
     }
 
-    .lightbox__bar,
-    .lightbox__caption {
+    .lightbox__bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -660,18 +732,6 @@
       transform: translateY(0);
     }
 
-    @keyframes cue {
-      0%, 100% {
-        transform: scaleX(.38);
-        opacity: .45;
-      }
-
-      45% {
-        transform: scaleX(1);
-        opacity: 1;
-      }
-    }
-
     @media (min-width: 740px) {
       .gallery-grid {
         columns: 2;
@@ -693,25 +753,12 @@
         display: none;
       }
 
-      .hero {
-        padding: 104px 0 38px;
-      }
-
       .section__head,
       .about,
       .commission,
-      .contact__grid {
+      .contact__grid,
+      .contact-form__row {
         grid-template-columns: 1fr;
-      }
-
-      .hero__side {
-        position: static;
-        padding-bottom: 0;
-        margin-top: 34px;
-      }
-
-      .hero__mark {
-        width: 96px;
       }
 
       .about__image img {
@@ -746,10 +793,6 @@
     }
 
     @media (max-width: 520px) {
-      h1 {
-        font-size: clamp(58px, 17vw, 76px);
-      }
-
       .hero__copy {
         font-size: 18px;
       }
@@ -760,15 +803,6 @@
 
       .work img {
         min-height: 230px;
-      }
-
-      .work__meta {
-        opacity: 1;
-        transform: none;
-      }
-
-      .work::after {
-        opacity: 1;
       }
     }
 
@@ -805,15 +839,13 @@
   <main>
     <section class="hero" id="start" aria-labelledby="hero-title">
       <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true">
-      <div class="hero__content page-shell" data-hero>
-        <div>
-          <p class="eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
-          <h1 id="hero-title">beatap.atelier</h1>
-        </div>
-        <aside class="hero__side" aria-label="Monogram pracowni">
+      <h1 id="hero-title" class="sr-only">beatap.atelier — Malarstwo współczesne Abstrakcje</h1>
+      <div class="hero__inner" data-hero>
+        <div class="hero__brand">
           <img class="hero__mark" src="logo.png" alt="Monogram BP">
-          <a class="scroll-cue" href="#o-mnie">Przewiń</a>
-        </aside>
+          <span class="hero__brand-name">beatap.atelier</span>
+        </div>
+        <p class="hero__eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
       </div>
     </section>
 
@@ -822,8 +854,8 @@
         <div class="about__text" data-reveal>
           <p class="section__label">O mnie</p>
           <h2 id="about-title">Materia, cisza i gest</h2>
-          <p class="lead">Beata Przedpełska tworzy współczesne abstrakcje o matowej, wyczuwalnej strukturze. Każdy obraz powstaje jako odpowiedź na miejsce, światło i rytm wnętrza.</p>
-          <p class="body-copy">Pracownia beatap.atelier skupia się na kompozycjach w głębokich szarościach, antracycie i węglu. Obrazy są projektowane tak, aby nie dominować przestrzeni, tylko nadawać jej ciężar, balans i indywidualny charakter.</p>
+          <p class="lead placeholder-copy">Beata Przedpełska tworzy współczesne abstrakcje o matowej, wyczuwalnej strukturze. Każdy obraz powstaje jako odpowiedź na miejsce, światło i rytm wnętrza.</p>
+          <p class="body-copy placeholder-copy">Pracownia beatap.atelier skupia się na kompozycjach w głębokich szarościach, antracycie i węglu. Obrazy są projektowane tak, aby nie dominować przestrzeni, tylko nadawać jej ciężar, balans i indywidualny charakter.</p>
         </div>
         <figure class="about__image" data-reveal>
           <img src="Zdjęcie w sekcji O mnie.webp" alt="Obraz beatap.atelier w jasnym minimalistycznym wnętrzu" loading="lazy" decoding="async">
@@ -837,46 +869,37 @@
           <p class="section__label">Realizacje</p>
           <div>
             <h2 id="gallery-title">Galeria prac</h2>
-            <p class="hero__copy">Matowe płótna, struktury zbliżeniowe i obrazy w aranżacjach wnętrz. Kliknij wybraną pracę, aby obejrzeć ją w powiększeniu.</p>
+            <p class="hero__copy placeholder-copy">Matowe płótna, struktury zbliżeniowe i obrazy w aranżacjach wnętrz. Kliknij wybraną pracę, aby obejrzeć ją w powiększeniu.</p>
           </div>
         </header>
 
         <div class="gallery-grid" data-gallery>
-          <button class="work" type="button" data-title="Charcoal Surface" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" alt="Teksturowany obraz w odcieniach antracytu" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Charcoal Surface</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Slate Room" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" alt="Abstrakcyjny obraz w jasnym wnętrzu" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Slate Room</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Graphite Field" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" alt="Grafitowa struktura obrazu z bliska" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Graphite Field</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Quiet Carbon" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" alt="Pionowe zdjęcie abstrakcyjnej realizacji beatap.atelier" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Quiet Carbon</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Ash Relief" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" alt="Szary relief malarski na płótnie" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Ash Relief</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Anthracite Study" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" alt="Antracytowe płótno o wyraźnej fakturze" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Anthracite Study</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Concrete Veil" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" alt="Obraz abstrakcyjny inspirowany betonem i łupkiem" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Concrete Veil</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Soft Graphite" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" alt="Minimalistyczny obraz w chłodnych szarościach" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Soft Graphite</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Coal Light" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" alt="Ciemna tekstura malarska z subtelnym światłem" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Coal Light</span><span>2026</span></span>
           </button>
         </div>
       </div>
@@ -889,19 +912,19 @@
           <h2 id="commission-title">Praca tworzona dla konkretnego wnętrza</h2>
         </div>
         <div data-reveal>
-          <p class="hero__copy">Zamówienie zaczyna się od rozmowy o miejscu, wymiarze i nastroju. Na tej podstawie powstaje obraz dopasowany skalą, fakturą i temperaturą szarości.</p>
+          <p class="hero__copy placeholder-copy">Zamówienie zaczyna się od rozmowy o miejscu, wymiarze i nastroju. Na tej podstawie powstaje obraz dopasowany skalą, fakturą i temperaturą szarości.</p>
           <div class="process" aria-label="Proces zamówienia">
             <div class="process__item">
               <strong>Rozmowa</strong>
-              <p>Krótki brief, zdjęcia wnętrza, preferowany format i kierunek pracy.</p>
+              <p class="placeholder-copy">Krótki brief, zdjęcia wnętrza, preferowany format i kierunek pracy.</p>
             </div>
             <div class="process__item">
               <strong>Kompozycja</strong>
-              <p>Dobór proporcji, ciężaru faktury i palety opartej na antracycie, grafitach oraz écru.</p>
+              <p class="placeholder-copy">Dobór proporcji, ciężaru faktury i palety opartej na antracycie, grafitach oraz écru.</p>
             </div>
             <div class="process__item">
               <strong>Realizacja</strong>
-              <p>Obraz powstaje warstwowo, z uwzględnieniem światła i rytmu przestrzeni, do której trafi.</p>
+              <p class="placeholder-copy">Obraz powstaje warstwowo, z uwzględnieniem światła i rytmu przestrzeni, do której trafi.</p>
             </div>
           </div>
         </div>
@@ -913,12 +936,47 @@
         <div>
           <p class="section__label">Kontakt</p>
           <h2 id="contact-title">Obrazy na zamówienie -> DM</h2>
-          <p class="contact__copy">Napisz wiadomość, jeśli chcesz zamówić obraz do wnętrza albo zapytać o dostępne prace.</p>
+          <p class="contact__copy placeholder-copy">Napisz wiadomość, jeśli chcesz zamówić obraz do wnętrza albo zapytać o dostępne prace.</p>
+
+          <form class="contact-form" data-contact-form novalidate>
+            <div class="contact-form__row">
+              <div class="field">
+                <label for="contact-name">Imię i nazwisko</label>
+                <input type="text" id="contact-name" name="name" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="contact-email">Adres e-mail</label>
+                <input type="email" id="contact-email" name="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="contact-message">Wiadomość</label>
+              <textarea id="contact-message" name="message" rows="4" required></textarea>
+            </div>
+            <button class="button contact-form__submit" type="submit">Wyślij wiadomość</button>
+            <p class="contact-form__note" data-contact-form-note hidden>Dziękujemy! Formularz wysyłki wiadomości jest jeszcze w przygotowaniu — napisz tymczasem na Instagramie lub e-mailem.</p>
+          </form>
         </div>
+
         <div class="contact__details">
-          <a class="button" href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer">Napisz na Instagramie</a>
-          <span>beatap.atelier</span>
-          <a href="mailto:kontakt@beatap.atelier">kontakt@beatap.atelier</a>
+          <span class="contact__details-label">beatap.atelier</span>
+          <div class="social-links" aria-label="Social media i e-mail">
+            <a class="social-link" href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer" aria-label="Instagram beatap.atelier">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4.2"></circle>
+                <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"></circle>
+              </svg>
+              <span>Instagram</span>
+            </a>
+            <a class="social-link" href="mailto:kontakt@beatap.atelier" aria-label="Wyślij e-mail na kontakt@beatap.atelier">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2.4"></rect>
+                <path d="M4 7l8 6 8-6"></path>
+              </svg>
+              <span>kontakt@beatap.atelier</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -941,10 +999,6 @@
       <img class="lightbox__image" src="" alt="">
       <button class="lightbox__nav lightbox__nav--next" type="button" data-next aria-label="Następna praca">→</button>
     </div>
-    <div class="lightbox__caption">
-      <span data-lightbox-title></span>
-      <span data-lightbox-year></span>
-    </div>
   </div>
 
   <script>
@@ -956,12 +1010,12 @@
     const works = [...document.querySelectorAll('.work')]
     const lightbox = document.querySelector('.lightbox')
     const lightboxImage = document.querySelector('.lightbox__image')
-    const lightboxTitle = document.querySelector('[data-lightbox-title]')
-    const lightboxYear = document.querySelector('[data-lightbox-year]')
     const lightboxCount = document.querySelector('[data-lightbox-count]')
     const closeButton = document.querySelector('[data-close]')
     const prevButton = document.querySelector('[data-prev]')
     const nextButton = document.querySelector('[data-next]')
+    const contactForm = document.querySelector('[data-contact-form]')
+    const contactFormNote = document.querySelector('[data-contact-form-note]')
     let activeIndex = 0
     let lastFocusedElement = null
 
@@ -979,8 +1033,6 @@
       window.setTimeout(() => {
         lightboxImage.src = work.dataset.src
         lightboxImage.alt = work.querySelector('img').alt
-        lightboxTitle.textContent = work.dataset.title
-        lightboxYear.textContent = work.dataset.year
         lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
         lightboxImage.classList.remove('is-changing')
       }, prefersReducedMotion ? 0 : 160)
@@ -1068,6 +1120,11 @@
     nextButton.addEventListener('click', () => showWork(activeIndex + 1))
     lightbox.addEventListener('click', event => {
       if (event.target === lightbox) closeLightbox()
+    })
+    contactForm.addEventListener('submit', event => {
+      event.preventDefault()
+      contactFormNote.hidden = false
+      contactForm.reset()
     })
     window.addEventListener('scroll', syncNav, { passive: true })
     window.addEventListener('keydown', event => {
