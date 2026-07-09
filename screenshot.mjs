@@ -1,4 +1,5 @@
 import { mkdirSync, readdirSync, existsSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import puppeteer from 'puppeteer-core'
 
 const chromePaths = [
