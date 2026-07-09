@@ -164,6 +164,107 @@
       transform-origin: left;
     }
 
+    .nav__toggle {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid hsl(var(--line) / .18);
+      background: transparent;
+      color: hsl(var(--text));
+      cursor: pointer;
+    }
+
+    .nav__toggle span {
+      display: block;
+      width: 18px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .mobile-nav {
+      position: fixed;
+      inset: 0;
+      z-index: 110;
+      visibility: hidden;
+    }
+
+    .mobile-nav.is-open {
+      visibility: visible;
+    }
+
+    .mobile-nav__backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 105;
+      opacity: 0;
+      pointer-events: none;
+      background: hsl(var(--bg) / .62);
+      backdrop-filter: blur(4px);
+      transition: opacity .32s var(--ease-soft);
+    }
+
+    .mobile-nav.is-open .mobile-nav__backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-nav__panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 110;
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+      width: min(82vw, 340px);
+      padding: 20px 28px 32px;
+      background: hsl(var(--bg) / .98);
+      border-left: 1px solid hsl(var(--line) / .1);
+      transform: translateX(100%);
+      transition: transform .42s var(--ease);
+    }
+
+    .mobile-nav.is-open .mobile-nav__panel {
+      transform: translateX(0);
+    }
+
+    .mobile-nav__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mobile-nav__brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+
+    .mobile-nav__links {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .mobile-nav__links a {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: hsl(var(--text));
+      transition: color .28s var(--ease);
+    }
+
+    .mobile-nav__links a:hover,
+    .mobile-nav__links a:focus-visible {
+      color: hsl(var(--accent));
+    }
+
     .hero {
       position: relative;
       min-height: 100svh;
@@ -753,6 +854,10 @@
         display: none;
       }
 
+      .nav__toggle {
+        display: inline-flex;
+      }
+
       .section__head,
       .about,
       .commission,
@@ -833,8 +938,29 @@
         <a href="#zamowienia">Zamówienia</a>
         <a href="#kontakt">Kontakt</a>
       </div>
+      <button class="nav__toggle" type="button" data-menu-open aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav" aria-label="Otwórz menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </nav>
+
+  <div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Menu nawigacji" aria-hidden="true">
+    <div class="mobile-nav__backdrop" data-menu-backdrop></div>
+    <div class="mobile-nav__panel">
+      <div class="mobile-nav__bar">
+        <span class="mobile-nav__brand">beatap.atelier</span>
+        <button class="icon-button" type="button" data-menu-close aria-label="Zamknij menu">×</button>
+      </div>
+      <nav class="mobile-nav__links" aria-label="Nawigacja mobilna">
+        <a href="#o-mnie">O mnie</a>
+        <a href="#galeria">Realizacje</a>
+        <a href="#zamowienia">Zamówienia</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </div>
 
   <main>
     <section class="hero" id="start" aria-labelledby="hero-title">
@@ -1016,8 +1142,14 @@
     const nextButton = document.querySelector('[data-next]')
     const contactForm = document.querySelector('[data-contact-form]')
     const contactFormNote = document.querySelector('[data-contact-form-note]')
+    const navToggle = document.querySelector('[data-menu-open]')
+    const menuCloseButton = document.querySelector('[data-menu-close]')
+    const mobileNav = document.querySelector('.mobile-nav')
+    const mobileNavBackdrop = document.querySelector('[data-menu-backdrop]')
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav__links a')
     let activeIndex = 0
     let lastFocusedElement = null
+    let lastFocusedNavToggle = null
 
     const syncNav = () => {
       nav.classList.toggle('is-scrolled', window.scrollY > 24)
@@ -1058,6 +1190,38 @@
     const trapFocus = event => {
       if (!lightbox.classList.contains('is-open') || event.key !== 'Tab') return
       const focusable = [...lightbox.querySelectorAll('button')]
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    const openMobileNav = () => {
+      lastFocusedNavToggle = document.activeElement
+      mobileNav.classList.add('is-open')
+      mobileNav.setAttribute('aria-hidden', 'false')
+      navToggle.setAttribute('aria-expanded', 'true')
+      document.body.style.overflow = 'hidden'
+      menuCloseButton.focus()
+    }
+
+    const closeMobileNav = () => {
+      mobileNav.classList.remove('is-open')
+      mobileNav.setAttribute('aria-hidden', 'true')
+      navToggle.setAttribute('aria-expanded', 'false')
+      document.body.style.overflow = ''
+      if (lastFocusedNavToggle) lastFocusedNavToggle.focus()
+    }
+
+    const trapMobileNavFocus = event => {
+      if (!mobileNav.classList.contains('is-open') || event.key !== 'Tab') return
+      const focusable = [menuCloseButton, ...mobileNavLinks]
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
       if (event.shiftKey && document.activeElement === first) {
@@ -1126,8 +1290,16 @@
       contactFormNote.hidden = false
       contactForm.reset()
     })
+    navToggle.addEventListener('click', openMobileNav)
+    menuCloseButton.addEventListener('click', closeMobileNav)
+    mobileNavBackdrop.addEventListener('click', closeMobileNav)
+    mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileNav))
     window.addEventListener('scroll', syncNav, { passive: true })
     window.addEventListener('keydown', event => {
+      if (mobileNav.classList.contains('is-open')) {
+        if (event.key === 'Escape') closeMobileNav()
+        trapMobileNavFocus(event)
+      }
       if (!lightbox.classList.contains('is-open')) return
       if (event.key === 'Escape') closeLightbox()
       if (event.key === 'ArrowLeft') showWork(activeIndex - 1)
