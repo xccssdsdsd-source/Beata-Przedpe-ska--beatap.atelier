@@ -17,7 +17,7 @@ const outDir = new URL('./temporary screenshots/', import.meta.url)
 mkdirSync(outDir, { recursive: true })
 const existing = readdirSync(outDir).filter(f => /^screenshot-\d+\.png$/.test(f))
 const next = existing.reduce((max, f) => Math.max(max, Number(f.match(/\d+/)[0])), 0) + 1
-const target = new URL(`screenshot-${next}.png`, outDir)
+const target = fileURLToPath(new URL(`screenshot-${next}.png`, outDir))
 
 const browser = await puppeteer.launch({ executablePath, headless: 'shell', args: ['--no-sandbox', '--hide-scrollbars'] })
 const page = await browser.newPage()
@@ -30,4 +30,4 @@ await new Promise(resolve => setTimeout(resolve, 1200))
 await page.screenshot({ path: target, fullPage: true })
 await browser.close()
 
-console.log(decodeURIComponent(target.pathname.slice(1)))
+console.log(target)
