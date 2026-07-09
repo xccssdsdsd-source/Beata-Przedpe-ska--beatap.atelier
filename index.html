@@ -220,6 +220,21 @@
       text-transform: uppercase;
     }
 
+    .eyebrow.is-typing::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: .9em;
+      margin-left: 2px;
+      background: currentColor;
+      vertical-align: -0.1em;
+      animation: blink-cursor .8s steps(1) infinite;
+    }
+
+    @keyframes blink-cursor {
+      50% { opacity: 0; }
+    }
+
     h1,
     h2,
     h3 {
@@ -792,7 +807,7 @@
       <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true">
       <div class="hero__content page-shell" data-hero>
         <div>
-          <p class="eyebrow">Malarstwo współczesne | Abstrakcje</p>
+          <p class="eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
           <h1 id="hero-title">beatap.atelier</h1>
         </div>
         <aside class="hero__side" aria-label="Monogram pracowni">
@@ -1013,6 +1028,28 @@
           item.style.transform = 'translateY(0)'
         }, 150 + index * 120)
       })
+    }
+
+    const typewriterEl = document.querySelector('[data-typewriter]')
+    if (typewriterEl) {
+      const fullText = typewriterEl.textContent
+      if (prefersReducedMotion) {
+        typewriterEl.textContent = fullText
+      } else {
+        typewriterEl.textContent = ''
+        typewriterEl.classList.add('is-typing')
+        let charIndex = 0
+        const typeNextChar = () => {
+          charIndex++
+          typewriterEl.textContent = fullText.slice(0, charIndex)
+          if (charIndex < fullText.length) {
+            window.setTimeout(typeNextChar, 42)
+          } else {
+            typewriterEl.classList.remove('is-typing')
+          }
+        }
+        window.setTimeout(typeNextChar, 250)
+      }
     }
 
     const revealObserver = new IntersectionObserver(entries => {
