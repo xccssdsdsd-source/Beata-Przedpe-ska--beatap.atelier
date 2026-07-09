@@ -263,6 +263,21 @@
       text-shadow: 0 6px 34px hsl(var(--bg) / .6);
     }
 
+    .hero__eyebrow.is-typing::after {
+      content: '';
+      display: inline-block;
+      width: 2px;
+      height: .78em;
+      margin-left: 4px;
+      background: currentColor;
+      vertical-align: -0.08em;
+      animation: blink-cursor .8s steps(1) infinite;
+    }
+
+    @keyframes blink-cursor {
+      50% { opacity: 0; }
+    }
+
     h1,
     h2,
     h3 {
@@ -824,13 +839,13 @@
   <main>
     <section class="hero" id="start" aria-labelledby="hero-title">
       <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true">
-      <h1 id="hero-title" class="sr-only">beatap.atelier — Malarstwo współczesne | Abstrakcje</h1>
+      <h1 id="hero-title" class="sr-only">beatap.atelier — Malarstwo współczesne Abstrakcje</h1>
       <div class="hero__inner" data-hero>
         <div class="hero__brand">
           <img class="hero__mark" src="logo.png" alt="Monogram BP">
           <span class="hero__brand-name">beatap.atelier</span>
         </div>
-        <p class="hero__eyebrow">Malarstwo współczesne | Abstrakcje</p>
+        <p class="hero__eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
       </div>
     </section>
 
@@ -1065,6 +1080,28 @@
           item.style.transform = 'translateY(0)'
         }, 150 + index * 120)
       })
+    }
+
+    const typewriterEl = document.querySelector('[data-typewriter]')
+    if (typewriterEl) {
+      const fullText = typewriterEl.textContent
+      if (prefersReducedMotion) {
+        typewriterEl.textContent = fullText
+      } else {
+        typewriterEl.textContent = ''
+        typewriterEl.classList.add('is-typing')
+        let charIndex = 0
+        const typeNextChar = () => {
+          charIndex++
+          typewriterEl.textContent = fullText.slice(0, charIndex)
+          if (charIndex < fullText.length) {
+            window.setTimeout(typeNextChar, 42)
+          } else {
+            typewriterEl.classList.remove('is-typing')
+          }
+        }
+        window.setTimeout(typeNextChar, 250)
+      }
     }
 
     const revealObserver = new IntersectionObserver(entries => {
