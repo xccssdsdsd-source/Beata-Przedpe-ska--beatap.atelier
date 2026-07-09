@@ -21,6 +21,10 @@
       --line: 42 16% 92%;
       --ease: cubic-bezier(.19, 1, .22, 1);
       --ease-soft: cubic-bezier(.16, 1, .3, 1);
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --radius: 2px;
+      --shadow-sm: 0 1px 2px hsl(210 20% 2% / .3), 0 4px 14px -6px hsl(210 20% 2% / .45);
+      --shadow-lg: 0 2px 4px hsl(210 20% 2% / .32), 0 18px 42px -14px hsl(210 20% 2% / .62);
       color-scheme: dark;
     }
 
@@ -76,8 +80,9 @@
     }
 
     :focus-visible {
-      outline: 1px solid hsl(var(--text));
-      outline-offset: 5px;
+      outline: 2px solid hsl(var(--accent));
+      outline-offset: 3px;
+      border-radius: var(--radius);
     }
 
     .page-shell {
@@ -156,11 +161,18 @@
       transition: transform .36s var(--ease);
     }
 
-    .nav__links a:hover {
-      color: hsl(var(--text));
+    @media (hover: hover) and (pointer: fine) {
+      .nav__links a:hover {
+        color: hsl(var(--text));
+      }
+
+      .nav__links a:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
     }
 
-    .nav__links a:hover::after {
+    .nav__links a:focus-visible::after {
       transform: scaleX(1);
       transform-origin: left;
     }
@@ -174,9 +186,21 @@
       width: 44px;
       height: 44px;
       border: 1px solid hsl(var(--line) / .18);
-      background: transparent;
+      border-radius: var(--radius);
+      background: hsl(var(--line) / .04);
       color: hsl(var(--text));
       cursor: pointer;
+      transition: transform .16s var(--ease-out), background-color .16s var(--ease-out);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .nav__toggle:hover {
+        background: hsl(var(--line) / .12);
+      }
+    }
+
+    .nav__toggle:active {
+      transform: scale(.94);
     }
 
     .nav__toggle span {
@@ -341,6 +365,7 @@
       width: clamp(40px, 4.6vw, 54px);
       aspect-ratio: 1;
       border: 1px solid hsl(var(--line) / .18);
+      border-radius: var(--radius);
       object-fit: cover;
     }
 
@@ -474,9 +499,12 @@
 
     .about__image {
       position: relative;
+      margin: 0;
       overflow: hidden;
       border: 1px solid hsl(var(--primary) / .1);
+      border-radius: var(--radius);
       background: hsl(var(--primary) / .08);
+      box-shadow: 0 2px 6px hsl(var(--primary) / .06), 0 24px 60px -28px hsl(var(--primary) / .28);
     }
 
     .about__image img {
@@ -498,11 +526,13 @@
       margin: 0 0 18px;
       overflow: hidden;
       break-inside: avoid;
-      border: 0;
+      border: 1px solid hsl(var(--line) / .07);
+      border-radius: var(--radius);
       background: hsl(var(--primary));
       color: hsl(var(--text));
       cursor: zoom-in;
       padding: 0;
+      transition: transform .22s var(--ease-out), border-color .22s var(--ease-out), box-shadow .22s var(--ease-out);
     }
 
     .work img {
@@ -511,13 +541,30 @@
       object-fit: cover;
       filter: saturate(.78) brightness(.9);
       transform: scale(1.001);
-      transition: transform .9s var(--ease), filter .9s var(--ease);
+      transition: transform .7s var(--ease-soft), filter .7s var(--ease-soft);
     }
 
-    .work:hover img,
+    @media (hover: hover) and (pointer: fine) {
+      .work:hover {
+        transform: translateY(-3px);
+        border-color: hsl(var(--line) / .2);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .work:hover img {
+        filter: saturate(.9) brightness(1.05);
+        transform: scale(1.035);
+      }
+    }
+
     .work:focus-visible img {
       filter: saturate(.9) brightness(1.05);
       transform: scale(1.035);
+    }
+
+    .work:active {
+      transform: scale(.99);
+      transition-duration: .1s;
     }
 
     .commission {
@@ -540,6 +587,13 @@
       gap: 28px;
       padding: 30px 0;
       background: hsl(var(--bg));
+      transition: background-color .2s var(--ease-out);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .process__item:hover {
+        background: hsl(210 8% 9%);
+      }
     }
 
     .process__item strong {
@@ -600,29 +654,42 @@
     .field input,
     .field textarea {
       width: 100%;
-      padding: 12px 2px;
-      border: 0;
-      border-bottom: 1px solid hsl(var(--line) / .2);
-      background: transparent;
+      padding: 14px 14px;
+      border: 1px solid hsl(var(--line) / .14);
+      border-radius: var(--radius);
+      background: hsl(var(--line) / .03);
+      box-shadow: inset 0 1px 0 hsl(0 0% 100% / .03);
       color: hsl(var(--text));
       font: inherit;
       font-size: 15px;
       resize: vertical;
-      transition: border-color .28s var(--ease);
+      transition: border-color .16s var(--ease-out), background-color .16s var(--ease-out);
     }
 
     .field textarea {
-      min-height: 118px;
+      min-height: 132px;
     }
 
     .field input::placeholder,
     .field textarea::placeholder {
-      color: hsl(var(--muted) / .6);
+      color: hsl(var(--muted) / .5);
+    }
+
+    .field input:hover,
+    .field textarea:hover {
+      border-color: hsl(var(--line) / .24);
     }
 
     .field input:focus,
     .field textarea:focus {
-      border-color: hsl(var(--accent));
+      outline: none;
+      border-color: hsl(var(--accent) / .8);
+      background: hsl(var(--line) / .06);
+    }
+
+    .field input:focus-visible,
+    .field textarea:focus-visible {
+      outline: none;
     }
 
     .contact-form__submit {
@@ -646,22 +713,32 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      padding: .65em 1.5em;
-      border: 1px solid hsl(var(--text) / .22);
+      min-height: 52px;
+      padding: 0 32px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
       background: hsl(var(--text));
+      box-shadow: var(--shadow-sm), inset 0 1px 0 hsl(0 0% 100% / .5);
       color: hsl(var(--bg));
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: .15em;
+      letter-spacing: .18em;
       text-transform: uppercase;
-      transition: transform .32s var(--ease), background-color .32s var(--ease), color .32s var(--ease), border-color .32s var(--ease);
+      transition: transform .18s var(--ease-out), background-color .18s var(--ease-out), box-shadow .18s var(--ease-out);
     }
 
-    .button:hover {
-      transform: translateY(-2px);
-      border-color: hsl(var(--accent) / .56);
-      background: hsl(var(--accent));
+    @media (hover: hover) and (pointer: fine) {
+      .button:hover {
+        transform: translateY(-1px);
+        background: hsl(var(--surface));
+        box-shadow: var(--shadow-lg), inset 0 1px 0 hsl(0 0% 100% / .5);
+      }
+    }
+
+    .button:active {
+      transform: scale(.98);
+      box-shadow: var(--shadow-sm);
+      transition-duration: .1s;
     }
 
     .contact__details {
@@ -678,8 +755,15 @@
       min-height: clamp(420px, 44vw, 620px);
       overflow: hidden;
       border: 1px solid hsl(var(--line) / .12);
+      border-radius: var(--radius);
       color: hsl(var(--text));
       isolation: isolate;
+      transition: transform .22s var(--ease-out), border-color .22s var(--ease-out), box-shadow .22s var(--ease-out);
+    }
+
+    .instagram-card:active {
+      transform: scale(.995);
+      transition-duration: .1s;
     }
 
     .instagram-card::before,
@@ -732,10 +816,12 @@
       width: clamp(64px, 7vw, 92px);
       height: clamp(64px, 7vw, 92px);
       border: 1px solid hsl(var(--text) / .32);
+      border-radius: var(--radius);
       background: hsl(var(--bg) / .46);
       backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-sm);
       place-items: center;
-      transition: transform .35s var(--ease), background-color .35s var(--ease), border-color .35s var(--ease);
+      transition: transform .22s var(--ease-out), background-color .22s var(--ease-out), border-color .22s var(--ease-out);
     }
 
     .instagram-card__icon svg {
@@ -766,23 +852,31 @@
       line-height: .94;
     }
 
-    .instagram-card:hover img {
-      filter: saturate(.92) contrast(1.12);
-      transform: scale(1.055);
-    }
+    @media (hover: hover) and (pointer: fine) {
+      .instagram-card:hover {
+        transform: translateY(-3px);
+        border-color: hsl(var(--line) / .24);
+        box-shadow: var(--shadow-lg);
+      }
 
-    .instagram-card:hover::before {
-      opacity: .72;
-    }
+      .instagram-card:hover img {
+        filter: saturate(.92) contrast(1.12);
+        transform: scale(1.055);
+      }
 
-    .instagram-card:hover::after {
-      transform: translateY(0);
-    }
+      .instagram-card:hover::before {
+        opacity: .72;
+      }
 
-    .instagram-card:hover .instagram-card__icon {
-      transform: translateY(-4px);
-      border-color: hsl(var(--accent) / .58);
-      background: hsl(var(--bg) / .62);
+      .instagram-card:hover::after {
+        transform: translateY(0);
+      }
+
+      .instagram-card:hover .instagram-card__icon {
+        transform: translateY(-3px);
+        border-color: hsl(var(--accent) / .58);
+        background: hsl(var(--bg) / .62);
+      }
     }
 
     .contact__email {
@@ -849,18 +943,26 @@
       display: inline-grid;
       width: 44px;
       height: 44px;
-      border: 1px solid hsl(var(--line) / .13);
-      background: hsl(var(--line) / .04);
+      border: 1px solid hsl(var(--line) / .14);
+      border-radius: var(--radius);
+      background: hsl(var(--line) / .05);
       color: hsl(var(--text));
       cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
       place-items: center;
-      transition: transform .28s var(--ease), background-color .28s var(--ease), border-color .28s var(--ease);
+      transition: transform .16s var(--ease-out), background-color .16s var(--ease-out), border-color .16s var(--ease-out);
     }
 
-    .icon-button:hover {
-      transform: translateY(-2px);
-      border-color: hsl(var(--line) / .34);
-      background: hsl(var(--line) / .1);
+    @media (hover: hover) and (pointer: fine) {
+      .icon-button:hover {
+        border-color: hsl(var(--line) / .34);
+        background: hsl(var(--line) / .12);
+      }
+    }
+
+    .icon-button:active {
+      transform: scale(.94);
     }
 
     .lightbox__stage {
@@ -889,31 +991,43 @@
       display: grid;
       width: 52px;
       height: 52px;
-      transform: translateY(-50%);
-      border: 1px solid hsl(var(--line) / .13);
-      background: hsl(var(--bg) / .64);
+      margin-top: -26px;
+      border: 1px solid hsl(var(--line) / .14);
+      border-radius: var(--radius);
+      background: hsl(var(--bg) / .7);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
       color: hsl(var(--text));
       cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
       place-items: center;
-      transition: transform .28s var(--ease), background-color .28s var(--ease);
+      transition: transform .16s var(--ease-out), background-color .16s var(--ease-out), border-color .16s var(--ease-out);
     }
 
-    .lightbox__nav:hover {
-      background: hsl(var(--line) / .08);
+    @media (hover: hover) and (pointer: fine) {
+      .lightbox__nav:hover {
+        border-color: hsl(var(--line) / .32);
+        background: hsl(var(--bg) / .9);
+      }
+    }
+
+    .lightbox__nav:active {
+      transform: scale(.94);
     }
 
     .lightbox__nav--prev {
-      left: 0;
+      left: 8px;
     }
 
     .lightbox__nav--next {
-      right: 0;
+      right: 8px;
     }
 
     .reveal-ready [data-reveal] {
       opacity: 0;
-      transform: translateY(34px);
-      transition: opacity .9s var(--ease), transform .9s var(--ease);
+      transform: translateY(24px);
+      transition: opacity .6s var(--ease-out), transform .6s var(--ease-out);
     }
 
     .reveal-ready [data-reveal].is-visible,
@@ -972,7 +1086,7 @@
       .lightbox__nav {
         top: auto;
         bottom: 58px;
-        transform: none;
+        margin-top: 0;
         width: 48px;
         height: 48px;
       }
