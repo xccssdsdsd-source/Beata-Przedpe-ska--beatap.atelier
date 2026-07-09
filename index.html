@@ -364,19 +364,16 @@
       text-shadow: 0 6px 34px hsl(var(--bg) / .6);
     }
 
-    .hero__eyebrow.is-typing::after {
-      content: '';
-      display: inline-block;
-      width: 2px;
-      height: .78em;
-      margin-left: 4px;
-      background: currentColor;
-      vertical-align: -0.08em;
-      animation: blink-cursor .8s steps(1) infinite;
+    .hero__brand,
+    [data-hero-headline],
+    .hero__copy {
+      opacity: 0;
     }
 
-    @keyframes blink-cursor {
-      50% { opacity: 0; }
+    [data-hero-headline] [data-word] {
+      display: inline-block;
+      opacity: 0;
+      will-change: transform, filter, opacity;
     }
 
     h1,
@@ -787,12 +784,6 @@
       max-width: min(100%, 1180px);
       max-height: 74svh;
       object-fit: contain;
-      opacity: 1;
-      transition: opacity .22s var(--ease);
-    }
-
-    .lightbox__image.is-changing {
-      opacity: 0;
     }
 
     .lightbox__nav {
@@ -824,13 +815,6 @@
 
     [data-reveal] {
       opacity: 0;
-      transform: translateY(34px);
-      transition: opacity .9s var(--ease), transform .9s var(--ease);
-    }
-
-    [data-reveal].is-visible {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     @media (min-width: 740px) {
@@ -921,7 +905,10 @@
         transition-duration: .001ms !important;
       }
 
-      [data-reveal] {
+      [data-reveal],
+      .hero__brand,
+      [data-hero-headline],
+      .hero__copy {
         opacity: 1;
         transform: none;
       }
@@ -971,7 +958,7 @@
           <img class="hero__mark" src="logo.png" alt="Monogram BP">
           <span class="hero__brand-name">beatap.atelier</span>
         </div>
-        <p class="hero__eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
+        <p class="hero__eyebrow" data-hero-headline>Malarstwo współczesne Abstrakcje</p>
       </div>
     </section>
 
@@ -1127,186 +1114,6 @@
     </div>
   </div>
 
-  <script>
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const nav = document.querySelector('.nav')
-    const heroTexture = document.querySelector('.hero__texture')
-    const revealItems = document.querySelectorAll('[data-reveal]')
-    const heroItems = document.querySelectorAll('[data-hero] > *')
-    const works = [...document.querySelectorAll('.work')]
-    const lightbox = document.querySelector('.lightbox')
-    const lightboxImage = document.querySelector('.lightbox__image')
-    const lightboxCount = document.querySelector('[data-lightbox-count]')
-    const closeButton = document.querySelector('[data-close]')
-    const prevButton = document.querySelector('[data-prev]')
-    const nextButton = document.querySelector('[data-next]')
-    const contactForm = document.querySelector('[data-contact-form]')
-    const contactFormNote = document.querySelector('[data-contact-form-note]')
-    const navToggle = document.querySelector('[data-menu-open]')
-    const menuCloseButton = document.querySelector('[data-menu-close]')
-    const mobileNav = document.querySelector('.mobile-nav')
-    const mobileNavBackdrop = document.querySelector('[data-menu-backdrop]')
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav__links a')
-    let activeIndex = 0
-    let lastFocusedElement = null
-    let lastFocusedNavToggle = null
-
-    const syncNav = () => {
-      nav.classList.toggle('is-scrolled', window.scrollY > 24)
-      if (!prefersReducedMotion && heroTexture) {
-        heroTexture.style.setProperty('--parallax', `${window.scrollY * .08}px`)
-      }
-    }
-
-    const showWork = index => {
-      activeIndex = (index + works.length) % works.length
-      const work = works[activeIndex]
-      lightboxImage.classList.add('is-changing')
-      window.setTimeout(() => {
-        lightboxImage.src = work.dataset.src
-        lightboxImage.alt = work.querySelector('img').alt
-        lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
-        lightboxImage.classList.remove('is-changing')
-      }, prefersReducedMotion ? 0 : 160)
-    }
-
-    const openLightbox = index => {
-      lastFocusedElement = document.activeElement
-      showWork(index)
-      lightbox.classList.add('is-open')
-      lightbox.setAttribute('aria-hidden', 'false')
-      document.body.style.overflow = 'hidden'
-      closeButton.focus()
-    }
-
-    const closeLightbox = () => {
-      lightbox.classList.remove('is-open')
-      lightbox.setAttribute('aria-hidden', 'true')
-      document.body.style.overflow = ''
-      lightboxImage.removeAttribute('src')
-      if (lastFocusedElement) lastFocusedElement.focus()
-    }
-
-    const trapFocus = event => {
-      if (!lightbox.classList.contains('is-open') || event.key !== 'Tab') return
-      const focusable = [...lightbox.querySelectorAll('button')]
-      const first = focusable[0]
-      const last = focusable[focusable.length - 1]
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault()
-        last.focus()
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault()
-        first.focus()
-      }
-    }
-
-    const openMobileNav = () => {
-      lastFocusedNavToggle = document.activeElement
-      mobileNav.classList.add('is-open')
-      mobileNav.setAttribute('aria-hidden', 'false')
-      navToggle.setAttribute('aria-expanded', 'true')
-      document.body.style.overflow = 'hidden'
-      menuCloseButton.focus()
-    }
-
-    const closeMobileNav = () => {
-      mobileNav.classList.remove('is-open')
-      mobileNav.setAttribute('aria-hidden', 'true')
-      navToggle.setAttribute('aria-expanded', 'false')
-      document.body.style.overflow = ''
-      if (lastFocusedNavToggle) lastFocusedNavToggle.focus()
-    }
-
-    const trapMobileNavFocus = event => {
-      if (!mobileNav.classList.contains('is-open') || event.key !== 'Tab') return
-      const focusable = [menuCloseButton, ...mobileNavLinks]
-      const first = focusable[0]
-      const last = focusable[focusable.length - 1]
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault()
-        last.focus()
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault()
-        first.focus()
-      }
-    }
-
-    if (!prefersReducedMotion) {
-      heroItems.forEach((item, index) => {
-        item.style.opacity = 0
-        item.style.transform = 'translateY(32px)'
-        window.setTimeout(() => {
-          item.style.transition = 'opacity 1.1s cubic-bezier(.19, 1, .22, 1), transform 1.1s cubic-bezier(.19, 1, .22, 1)'
-          item.style.opacity = 1
-          item.style.transform = 'translateY(0)'
-        }, 150 + index * 120)
-      })
-    }
-
-    const typewriterEl = document.querySelector('[data-typewriter]')
-    if (typewriterEl) {
-      const fullText = typewriterEl.textContent
-      if (prefersReducedMotion) {
-        typewriterEl.textContent = fullText
-      } else {
-        typewriterEl.textContent = ''
-        typewriterEl.classList.add('is-typing')
-        let charIndex = 0
-        const typeNextChar = () => {
-          charIndex++
-          typewriterEl.textContent = fullText.slice(0, charIndex)
-          if (charIndex < fullText.length) {
-            window.setTimeout(typeNextChar, 42)
-          } else {
-            typewriterEl.classList.remove('is-typing')
-          }
-        }
-        window.setTimeout(typeNextChar, 250)
-      }
-    }
-
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          revealObserver.unobserve(entry.target)
-        }
-      })
-    }, { threshold: .16, rootMargin: '0px 0px -8% 0px' })
-
-    revealItems.forEach(item => revealObserver.observe(item))
-    works.forEach((work, index) => work.addEventListener('click', () => openLightbox(index)))
-    closeButton.addEventListener('click', closeLightbox)
-    prevButton.addEventListener('click', () => showWork(activeIndex - 1))
-    nextButton.addEventListener('click', () => showWork(activeIndex + 1))
-    lightbox.addEventListener('click', event => {
-      if (event.target === lightbox) closeLightbox()
-    })
-    contactForm.addEventListener('submit', event => {
-      event.preventDefault()
-      contactFormNote.hidden = false
-      contactForm.reset()
-    })
-    navToggle.addEventListener('click', openMobileNav)
-    menuCloseButton.addEventListener('click', closeMobileNav)
-    mobileNavBackdrop.addEventListener('click', closeMobileNav)
-    mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileNav))
-    window.addEventListener('scroll', syncNav, { passive: true })
-    window.addEventListener('keydown', event => {
-      if (mobileNav.classList.contains('is-open')) {
-        if (event.key === 'Escape') closeMobileNav()
-        trapMobileNavFocus(event)
-      }
-      if (!lightbox.classList.contains('is-open')) return
-      if (event.key === 'Escape') closeLightbox()
-      if (event.key === 'ArrowLeft') showWork(activeIndex - 1)
-      if (event.key === 'ArrowRight') showWork(activeIndex + 1)
-      trapFocus(event)
-    })
-    syncNav()
-  </script>
+  <script src="dist/main.js" defer></script>
 </body>
 </html>
