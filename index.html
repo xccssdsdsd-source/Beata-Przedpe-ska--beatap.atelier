@@ -253,6 +253,11 @@
       line-height: 1.45;
     }
 
+    .placeholder-copy {
+      filter: blur(6px);
+      user-select: none;
+    }
+
     .hero__side {
       position: absolute;
       right: 0;
@@ -380,49 +385,10 @@
       transition: transform .9s var(--ease), filter .9s var(--ease);
     }
 
-    .work::after {
-      position: absolute;
-      inset: 0;
-      content: "";
-      opacity: 0;
-      background: linear-gradient(180deg, transparent 38%, hsl(var(--bg) / .78));
-      transition: opacity .5s var(--ease);
-    }
-
-    .work__meta {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 16px;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity .45s var(--ease), transform .45s var(--ease);
-    }
-
-    .work__meta span {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .13em;
-      text-align: left;
-      text-transform: uppercase;
-    }
-
     .work:hover img,
     .work:focus-visible img {
       filter: saturate(.9) brightness(1.05);
       transform: scale(1.035);
-    }
-
-    .work:hover::after,
-    .work:focus-visible::after,
-    .work:hover .work__meta,
-    .work:focus-visible .work__meta {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .commission {
@@ -651,8 +617,7 @@
       pointer-events: auto;
     }
 
-    .lightbox__bar,
-    .lightbox__caption {
+    .lightbox__bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -842,15 +807,6 @@
       .work img {
         min-height: 230px;
       }
-
-      .work__meta {
-        opacity: 1;
-        transform: none;
-      }
-
-      .work::after {
-        opacity: 1;
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -890,7 +846,7 @@
         <div>
           <p class="eyebrow">Malarstwo współczesne | Abstrakcje</p>
           <h1 id="hero-title">beatap.atelier</h1>
-          <p class="hero__copy">Teksturowane obrazy w odcieniach antracytu, grafitu i węgla, tworzone na zamówienie do spokojnych, świadomych wnętrz.</p>
+          <p class="hero__copy placeholder-copy">Teksturowane obrazy w odcieniach antracytu, grafitu i węgla, tworzone na zamówienie do spokojnych, świadomych wnętrz.</p>
         </div>
         <aside class="hero__side" aria-label="Monogram pracowni">
           <img class="hero__mark" src="logo.png" alt="Monogram BP">
@@ -904,8 +860,8 @@
         <div class="about__text" data-reveal>
           <p class="section__label">O mnie</p>
           <h2 id="about-title">Materia, cisza i gest</h2>
-          <p class="lead">Beata Przedpełska tworzy współczesne abstrakcje o matowej, wyczuwalnej strukturze. Każdy obraz powstaje jako odpowiedź na miejsce, światło i rytm wnętrza.</p>
-          <p class="body-copy">Pracownia beatap.atelier skupia się na kompozycjach w głębokich szarościach, antracycie i węglu. Obrazy są projektowane tak, aby nie dominować przestrzeni, tylko nadawać jej ciężar, balans i indywidualny charakter.</p>
+          <p class="lead placeholder-copy">Beata Przedpełska tworzy współczesne abstrakcje o matowej, wyczuwalnej strukturze. Każdy obraz powstaje jako odpowiedź na miejsce, światło i rytm wnętrza.</p>
+          <p class="body-copy placeholder-copy">Pracownia beatap.atelier skupia się na kompozycjach w głębokich szarościach, antracycie i węglu. Obrazy są projektowane tak, aby nie dominować przestrzeni, tylko nadawać jej ciężar, balans i indywidualny charakter.</p>
         </div>
         <figure class="about__image" data-reveal>
           <img src="Zdjęcie w sekcji O mnie.webp" alt="Obraz beatap.atelier w jasnym minimalistycznym wnętrzu" loading="lazy" decoding="async">
@@ -919,46 +875,37 @@
           <p class="section__label">Realizacje</p>
           <div>
             <h2 id="gallery-title">Galeria prac</h2>
-            <p class="hero__copy">Matowe płótna, struktury zbliżeniowe i obrazy w aranżacjach wnętrz. Kliknij wybraną pracę, aby obejrzeć ją w powiększeniu.</p>
+            <p class="hero__copy placeholder-copy">Matowe płótna, struktury zbliżeniowe i obrazy w aranżacjach wnętrz. Kliknij wybraną pracę, aby obejrzeć ją w powiększeniu.</p>
           </div>
         </header>
 
         <div class="gallery-grid" data-gallery>
-          <button class="work" type="button" data-title="Charcoal Surface" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" alt="Teksturowany obraz w odcieniach antracytu" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Charcoal Surface</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Slate Room" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" alt="Abstrakcyjny obraz w jasnym wnętrzu" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Slate Room</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Graphite Field" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" alt="Grafitowa struktura obrazu z bliska" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Graphite Field</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Quiet Carbon" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" alt="Pionowe zdjęcie abstrakcyjnej realizacji beatap.atelier" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Quiet Carbon</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Ash Relief" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" alt="Szary relief malarski na płótnie" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Ash Relief</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Anthracite Study" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" alt="Antracytowe płótno o wyraźnej fakturze" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Anthracite Study</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Concrete Veil" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" alt="Obraz abstrakcyjny inspirowany betonem i łupkiem" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Concrete Veil</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Soft Graphite" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" alt="Minimalistyczny obraz w chłodnych szarościach" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Soft Graphite</span><span>2026</span></span>
           </button>
-          <button class="work" type="button" data-title="Coal Light" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" data-reveal>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" data-reveal>
             <img src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" alt="Ciemna tekstura malarska z subtelnym światłem" loading="lazy" decoding="async">
-            <span class="work__meta"><span>Coal Light</span><span>2026</span></span>
           </button>
         </div>
       </div>
@@ -971,19 +918,19 @@
           <h2 id="commission-title">Praca tworzona dla konkretnego wnętrza</h2>
         </div>
         <div data-reveal>
-          <p class="hero__copy">Zamówienie zaczyna się od rozmowy o miejscu, wymiarze i nastroju. Na tej podstawie powstaje obraz dopasowany skalą, fakturą i temperaturą szarości.</p>
+          <p class="hero__copy placeholder-copy">Zamówienie zaczyna się od rozmowy o miejscu, wymiarze i nastroju. Na tej podstawie powstaje obraz dopasowany skalą, fakturą i temperaturą szarości.</p>
           <div class="process" aria-label="Proces zamówienia">
             <div class="process__item">
               <strong>Rozmowa</strong>
-              <p>Krótki brief, zdjęcia wnętrza, preferowany format i kierunek pracy.</p>
+              <p class="placeholder-copy">Krótki brief, zdjęcia wnętrza, preferowany format i kierunek pracy.</p>
             </div>
             <div class="process__item">
               <strong>Kompozycja</strong>
-              <p>Dobór proporcji, ciężaru faktury i palety opartej na antracycie, grafitach oraz écru.</p>
+              <p class="placeholder-copy">Dobór proporcji, ciężaru faktury i palety opartej na antracycie, grafitach oraz écru.</p>
             </div>
             <div class="process__item">
               <strong>Realizacja</strong>
-              <p>Obraz powstaje warstwowo, z uwzględnieniem światła i rytmu przestrzeni, do której trafi.</p>
+              <p class="placeholder-copy">Obraz powstaje warstwowo, z uwzględnieniem światła i rytmu przestrzeni, do której trafi.</p>
             </div>
           </div>
         </div>
@@ -994,8 +941,8 @@
       <div class="contact__grid page-shell" data-reveal>
         <div>
           <p class="section__label">Kontakt</p>
-          <h2 id="contact-title">Zamówienia i pytania</h2>
-          <p class="contact__copy">Napisz wiadomość, jeśli chcesz zamówić obraz do wnętrza albo zapytać o dostępne prace.</p>
+          <h2 id="contact-title">Obrazy na zamówienie -> DM</h2>
+          <p class="contact__copy placeholder-copy">Napisz wiadomość, jeśli chcesz zamówić obraz do wnętrza albo zapytać o dostępne prace.</p>
 
           <form class="contact-form" data-contact-form novalidate>
             <div class="contact-form__row">
@@ -1058,10 +1005,6 @@
       <img class="lightbox__image" src="" alt="">
       <button class="lightbox__nav lightbox__nav--next" type="button" data-next aria-label="Następna praca">→</button>
     </div>
-    <div class="lightbox__caption">
-      <span data-lightbox-title></span>
-      <span data-lightbox-year></span>
-    </div>
   </div>
 
   <script>
@@ -1073,8 +1016,6 @@
     const works = [...document.querySelectorAll('.work')]
     const lightbox = document.querySelector('.lightbox')
     const lightboxImage = document.querySelector('.lightbox__image')
-    const lightboxTitle = document.querySelector('[data-lightbox-title]')
-    const lightboxYear = document.querySelector('[data-lightbox-year]')
     const lightboxCount = document.querySelector('[data-lightbox-count]')
     const closeButton = document.querySelector('[data-close]')
     const prevButton = document.querySelector('[data-prev]')
@@ -1098,8 +1039,6 @@
       window.setTimeout(() => {
         lightboxImage.src = work.dataset.src
         lightboxImage.alt = work.querySelector('img').alt
-        lightboxTitle.textContent = work.dataset.title
-        lightboxYear.textContent = work.dataset.year
         lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
         lightboxImage.classList.remove('is-changing')
       }, prefersReducedMotion ? 0 : 160)
