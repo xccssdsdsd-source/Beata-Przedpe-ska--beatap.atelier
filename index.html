@@ -200,10 +200,8 @@
     }
 
     .hero__content {
-      display: grid;
-      grid-template-columns: minmax(0, .92fr) minmax(180px, .42fr);
-      align-items: end;
-      gap: clamp(32px, 7vw, 112px);
+      position: relative;
+      display: block;
     }
 
     .hero__mark {
@@ -233,8 +231,9 @@
     }
 
     h1 {
-      max-width: 980px;
-      font-size: clamp(70px, 14vw, 190px);
+      max-width: 1120px;
+      overflow-wrap: anywhere;
+      font-size: clamp(70px, 13vw, 166px);
     }
 
     h2 {
@@ -255,11 +254,14 @@
     }
 
     .hero__side {
+      position: absolute;
+      right: 0;
+      bottom: 8px;
       display: grid;
       align-content: end;
       justify-items: start;
       gap: 26px;
-      padding-bottom: 14px;
+      padding-bottom: 0;
     }
 
     .scroll-cue {
@@ -680,7 +682,6 @@
         padding: 104px 0 38px;
       }
 
-      .hero__content,
       .section__head,
       .about,
       .commission,
@@ -689,7 +690,9 @@
       }
 
       .hero__side {
+        position: static;
         padding-bottom: 0;
+        margin-top: 34px;
       }
 
       .hero__mark {
@@ -729,7 +732,7 @@
 
     @media (max-width: 520px) {
       h1 {
-        font-size: clamp(60px, 20vw, 92px);
+        font-size: clamp(58px, 17vw, 76px);
       }
 
       .hero__copy {
