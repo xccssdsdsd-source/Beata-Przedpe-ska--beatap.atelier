@@ -634,13 +634,14 @@
       right: 0;
     }
 
-    [data-reveal] {
+    .reveal-ready [data-reveal] {
       opacity: 0;
       transform: translateY(34px);
       transition: opacity .9s var(--ease), transform .9s var(--ease);
     }
 
-    [data-reveal].is-visible {
+    .reveal-ready [data-reveal].is-visible,
+    [data-reveal] {
       opacity: 1;
       transform: translateY(0);
     }
@@ -767,6 +768,7 @@
         transition-duration: .001ms !important;
       }
 
+      .reveal-ready [data-reveal],
       [data-reveal] {
         opacity: 1;
         transform: none;
@@ -935,6 +937,7 @@
 
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!prefersReducedMotion) document.documentElement.classList.add('reveal-ready')
     const nav = document.querySelector('.nav')
     const heroTexture = document.querySelector('.hero__texture')
     const revealItems = document.querySelectorAll('[data-reveal]')
