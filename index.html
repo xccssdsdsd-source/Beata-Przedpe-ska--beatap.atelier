@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="beatap.atelier - malarstwo współczesne, abstrakcje i teksturowane obrazy tworzone na zamówienie.">
+  <title>beatap.atelier - Malarstwo współczesne</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: 210 9% 6%;
+      --surface: 38 28% 88%;
+      --primary: 210 8% 13%;
+      --accent: 35 20% 80%;
+      --text: 42 24% 92%;
+      --muted: 35 11% 68%;
+      --slate: 210 7% 31%;
+      --line: 42 16% 92%;
+      --ease: cubic-bezier(.19, 1, .22, 1);
+      --ease-soft: cubic-bezier(.16, 1, .3, 1);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: hsl(var(--bg));
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 18% 4%, hsl(var(--slate) / .26), transparent 34rem),
+        linear-gradient(180deg, hsl(var(--bg)), hsl(210 8% 8%) 48%, hsl(var(--bg)));
+      color: hsl(var(--text));
+      font-family: Manrope, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      letter-spacing: .01em;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      content: "";
+      opacity: .26;
+      background-image:
+        linear-gradient(hsl(var(--text) / .028) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(var(--text) / .022) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    :focus-visible {
+      outline: 1px solid hsl(var(--text));
+      outline-offset: 5px;
+    }
+
+    .page-shell {
+      width: min(100% - 36px, 1380px);
+      margin-inline: auto;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      padding: 18px 0;
+      color: hsl(var(--text));
+      transition: background-color .45s var(--ease), border-color .45s var(--ease), padding .45s var(--ease);
+    }
+
+    .nav.is-scrolled {
+      padding: 12px 0;
+      border-bottom: 1px solid hsl(var(--line) / .08);
+      background: hsl(var(--bg) / .76);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: .02em;
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: clamp(14px, 3vw, 34px);
+      color: hsl(var(--muted));
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .nav__links a {
+      position: relative;
+      padding: 8px 0;
+      transition: color .28s var(--ease);
+    }
+
+    .nav__links a::after {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 3px;
+      height: 1px;
+      content: "";
+      transform: scaleX(0);
+      transform-origin: right;
+      background: hsl(var(--text));
+      transition: transform .36s var(--ease);
+    }
+
+    .nav__links a:hover {
+      color: hsl(var(--text));
+    }
+
+    .nav__links a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+      place-items: end start;
+      padding: 118px 0 58px;
+      background: hsl(var(--bg));
+    }
+
+    .hero__texture {
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      width: 100%;
+      height: 112%;
+      object-fit: cover;
+      filter: saturate(.72) contrast(1.06) brightness(.58);
+      transform: translateY(var(--parallax, 0));
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero::before {
+      background:
+        linear-gradient(90deg, hsl(var(--bg) / .92), hsl(var(--bg) / .54) 46%, transparent 76%),
+        linear-gradient(0deg, hsl(var(--bg) / .88), transparent 44%);
+    }
+
+    .hero::after {
+      opacity: .42;
+      background: radial-gradient(circle at 78% 14%, hsl(var(--accent) / .26), transparent 28rem);
+      mix-blend-mode: soft-light;
+    }
+
+    .hero__content {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(180px, .42fr);
+      align-items: end;
+      gap: clamp(32px, 7vw, 112px);
+    }
+
+    .hero__mark {
+      width: clamp(82px, 14vw, 164px);
+      aspect-ratio: 1;
+      border: 1px solid hsl(var(--line) / .12);
+      object-fit: cover;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: hsl(var(--muted));
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: .98;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(70px, 14vw, 190px);
+    }
+
+    h2 {
+      max-width: 850px;
+      font-size: clamp(46px, 8vw, 112px);
+    }
+
+    h3 {
+      font-size: clamp(30px, 4.8vw, 58px);
+    }
+
+    .hero__copy {
+      max-width: 520px;
+      margin: 26px 0 0;
+      color: hsl(var(--accent));
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.45;
+    }
+
+    .hero__side {
+      display: grid;
+      align-content: end;
+      justify-items: start;
+      gap: 26px;
+      padding-bottom: 14px;
+    }
+
+    .scroll-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: hsl(var(--muted));
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      width: 42px;
+      height: 1px;
+      content: "";
+      background: hsl(var(--muted) / .62);
+      transform-origin: left;
+      animation: cue 2.8s var(--ease) infinite;
+    }
+
+    .section {
+      padding: clamp(86px, 12vw, 170px) 0;
+    }
+
+    .section--warm {
+      background: hsl(var(--surface));
+      color: hsl(var(--primary));
+    }
+
+    .section__head {
+      display: grid;
+      grid-template-columns: minmax(140px, .32fr) minmax(0, 1fr);
+      gap: clamp(28px, 8vw, 120px);
+      margin-bottom: clamp(44px, 7vw, 86px);
+    }
+
+    .section__label {
+      margin: .72em 0 0;
+      color: currentColor;
+      opacity: .62;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: minmax(0, .82fr) minmax(320px, .74fr);
+      align-items: center;
+      gap: clamp(38px, 8vw, 112px);
+    }
+
+    .about__text {
+      max-width: 650px;
+    }
+
+    .lead {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(31px, 4.3vw, 58px);
+      font-weight: 500;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .body-copy {
+      max-width: 64ch;
+      margin: 28px 0 0;
+      color: hsl(var(--primary) / .72);
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .about__image {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid hsl(var(--primary) / .1);
+      background: hsl(var(--primary) / .08);
+    }
+
+    .about__image img {
+      width: 100%;
+      height: clamp(440px, 58vw, 720px);
+      object-fit: cover;
+      filter: saturate(.82) contrast(1.02);
+    }
+
+    .gallery-grid {
+      columns: 1;
+      column-gap: 18px;
+    }
+
+    .work {
+      position: relative;
+      display: block;
+      width: 100%;
+      margin: 0 0 18px;
+      overflow: hidden;
+      break-inside: avoid;
+      border: 0;
+      background: hsl(var(--primary));
+      color: hsl(var(--text));
+      cursor: zoom-in;
+      padding: 0;
+    }
+
+    .work img {
+      width: 100%;
+      min-height: 260px;
+      object-fit: cover;
+      filter: saturate(.78) brightness(.9);
+      transform: scale(1.001);
+      transition: transform .9s var(--ease), filter .9s var(--ease);
+    }
+
+    .work::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      opacity: 0;
+      background: linear-gradient(180deg, transparent 38%, hsl(var(--bg) / .78));
+      transition: opacity .5s var(--ease);
+    }
+
+    .work__meta {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 16px;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .45s var(--ease), transform .45s var(--ease);
+    }
+
+    .work__meta span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .13em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .work:hover img,
+    .work:focus-visible img {
+      filter: saturate(.9) brightness(1.05);
+      transform: scale(1.035);
+    }
+
+    .work:hover::after,
+    .work:focus-visible::after,
+    .work:hover .work__meta,
+    .work:focus-visible .work__meta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .commission {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(320px, .72fr);
+      gap: clamp(38px, 8vw, 112px);
+    }
+
+    .process {
+      display: grid;
+      gap: 1px;
+      background: hsl(var(--line) / .08);
+      border-top: 1px solid hsl(var(--line) / .08);
+      border-bottom: 1px solid hsl(var(--line) / .08);
+    }
+
+    .process__item {
+      display: grid;
+      grid-template-columns: minmax(110px, .34fr) 1fr;
+      gap: 28px;
+      padding: 30px 0;
+      background: hsl(var(--bg));
+    }
+
+    .process__item strong {
+      color: hsl(var(--accent));
+      font-family: "Cormorant Garamond", serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .process__item p {
+      max-width: 54ch;
+      margin: 0;
+      color: hsl(var(--muted));
+      font-size: 14px;
+    }
+
+    .contact {
+      display: grid;
+      min-height: 72svh;
+      align-items: end;
+    }
+
+    .contact__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .48fr);
+      align-items: end;
+      gap: clamp(36px, 7vw, 96px);
+    }
+
+    .contact__copy {
+      max-width: 780px;
+      margin: 26px 0 0;
+      color: hsl(var(--muted));
+      font-size: clamp(17px, 1.7vw, 22px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: .65em 1.5em;
+      border: 1px solid hsl(var(--text) / .22);
+      background: hsl(var(--text));
+      color: hsl(var(--bg));
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      transition: transform .32s var(--ease), background-color .32s var(--ease), color .32s var(--ease), border-color .32s var(--ease);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: hsl(var(--accent) / .56);
+      background: hsl(var(--accent));
+    }
+
+    .contact__details {
+      display: grid;
+      gap: 18px;
+      color: hsl(var(--muted));
+      font-size: 13px;
+    }
+
+    .contact__details a {
+      color: hsl(var(--text));
+      transition: color .28s var(--ease);
+    }
+
+    .contact__details a:hover {
+      color: hsl(var(--accent));
+    }
+
+    .footer {
+      padding: 28px 0 38px;
+      color: hsl(var(--muted));
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .footer .page-shell {
+      display: flex;
+      justify-content: space-between;
+      gap: 22px;
+      border-top: 1px solid hsl(var(--line) / .08);
+      padding-top: 24px;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+      padding: clamp(18px, 3vw, 38px);
+      opacity: 0;
+      pointer-events: none;
+      background: hsl(var(--bg) / .94);
+      backdrop-filter: blur(22px);
+      transition: opacity .32s var(--ease-soft);
+    }
+
+    .lightbox.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox__bar,
+    .lightbox__caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: hsl(var(--muted));
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .icon-button {
+      display: inline-grid;
+      width: 44px;
+      height: 44px;
+      border: 1px solid hsl(var(--line) / .13);
+      background: hsl(var(--line) / .04);
+      color: hsl(var(--text));
+      cursor: pointer;
+      place-items: center;
+      transition: transform .28s var(--ease), background-color .28s var(--ease), border-color .28s var(--ease);
+    }
+
+    .icon-button:hover {
+      transform: translateY(-2px);
+      border-color: hsl(var(--line) / .34);
+      background: hsl(var(--line) / .1);
+    }
+
+    .lightbox__stage {
+      position: relative;
+      display: grid;
+      min-height: 0;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .lightbox__image {
+      max-width: min(100%, 1180px);
+      max-height: 74svh;
+      object-fit: contain;
+      opacity: 1;
+      transition: opacity .22s var(--ease);
+    }
+
+    .lightbox__image.is-changing {
+      opacity: 0;
+    }
+
+    .lightbox__nav {
+      position: absolute;
+      top: 50%;
+      display: grid;
+      width: 52px;
+      height: 52px;
+      transform: translateY(-50%);
+      border: 1px solid hsl(var(--line) / .13);
+      background: hsl(var(--bg) / .64);
+      color: hsl(var(--text));
+      cursor: pointer;
+      place-items: center;
+      transition: transform .28s var(--ease), background-color .28s var(--ease);
+    }
+
+    .lightbox__nav:hover {
+      background: hsl(var(--line) / .08);
+    }
+
+    .lightbox__nav--prev {
+      left: 0;
+    }
+
+    .lightbox__nav--next {
+      right: 0;
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+    }
+
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes cue {
+      0%, 100% {
+        transform: scaleX(.38);
+        opacity: .45;
+      }
+
+      45% {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+    }
+
+    @media (min-width: 740px) {
+      .gallery-grid {
+        columns: 2;
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .gallery-grid {
+        columns: 3;
+      }
+    }
+
+    @media (max-width: 840px) {
+      .page-shell {
+        width: min(100% - 28px, 1380px);
+      }
+
+      .nav__links {
+        display: none;
+      }
+
+      .hero {
+        padding: 104px 0 38px;
+      }
+
+      .hero__content,
+      .section__head,
+      .about,
+      .commission,
+      .contact__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__side {
+        padding-bottom: 0;
+      }
+
+      .hero__mark {
+        width: 96px;
+      }
+
+      .about__image img {
+        height: min(126vw, 620px);
+      }
+
+      .process__item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 26px 0;
+      }
+
+      .lightbox {
+        padding: 14px;
+      }
+
+      .lightbox__nav {
+        top: auto;
+        bottom: 58px;
+        transform: none;
+        width: 48px;
+        height: 48px;
+      }
+
+      .lightbox__image {
+        max-height: 68svh;
+      }
+
+      .footer .page-shell {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      h1 {
+        font-size: clamp(60px, 20vw, 92px);
+      }
+
+      .hero__copy {
+        font-size: 18px;
+      }
+
+      .section {
+        padding: 76px 0;
+      }
+
+      .work img {
+        min-height: 230px;
+      }
+
+      .work__meta {
+        opacity: 1;
+        transform: none;
+      }
+
+      .work::after {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Główna nawigacja">
+    <div class="nav__inner page-shell">
+      <a class="brand" href="#start" aria-label="beatap.atelier - start">beatap.atelier</a>
+      <div class="nav__links">
+        <a href="#o-mnie">O mnie</a>
+        <a href="#galeria">Realizacje</a>
+        <a href="#zamowienia">Zamówienia</a>
+        <a href="#kontakt">Kontakt</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="start" aria-labelledby="hero-title">
+      <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true">
+      <div class="hero__content page-shell" data-hero>
+        <div>
+          <p class="eyebrow">Malarstwo współczesne | Abstrakcje</p>
+          <h1 id="hero-title">beatap.atelier</h1>
+          <p class="hero__copy">Teksturowane obrazy w odcieniach antracytu, grafitu i węgla, tworzone na zamówienie do spokojnych, świadomych wnętrz.</p>
+        </div>
+        <aside class="hero__side" aria-label="Monogram pracowni">
+          <img class="hero__mark" src="logo.png" alt="Monogram BP">
+          <a class="scroll-cue" href="#o-mnie">Przewiń</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section--warm" id="o-mnie" aria-labelledby="about-title">
+      <div class="about page-shell">
+        <div class="about__text" data-reveal>
+          <p class="section__label">O mnie</p>
+          <h2 id="about-title">Materia, cisza i gest</h2>
+          <p class="lead">Beata Przedpełska tworzy współczesne abstrakcje o matowej, wyczuwalnej strukturze. Każdy obraz powstaje jako odpowiedź na miejsce, światło i rytm wnętrza.</p>
+          <p class="body-copy">Pracownia beatap.atelier skupia się na kompozycjach w głębokich szarościach, antracycie i węglu. Obrazy są projektowane tak, aby nie dominować przestrzeni, tylko nadawać jej ciężar, balans i indywidualny charakter.</p>
+        </div>
+        <figure class="about__image" data-reveal>
+          <img src="Zdjęcie w sekcji O mnie.webp" alt="Obraz beatap.atelier w jasnym minimalistycznym wnętrzu" loading="lazy" decoding="async">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="galeria" aria-labelledby="gallery-title">
+      <div class="page-shell">
+        <header class="section__head" data-reveal>
+          <p class="section__label">Realizacje</p>
+          <div>
+            <h2 id="gallery-title">Galeria prac</h2>
+            <p class="hero__copy">Matowe płótna, struktury zbliżeniowe i obrazy w aranżacjach wnętrz. Kliknij wybraną pracę, aby obejrzeć ją w powiększeniu.</p>
+          </div>
+        </header>
+
+        <div class="gallery-grid" data-gallery>
+          <button class="work" type="button" data-title="Charcoal Surface" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" alt="Teksturowany obraz w odcieniach antracytu" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Charcoal Surface</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Slate Room" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" alt="Abstrakcyjny obraz w jasnym wnętrzu" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Slate Room</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Graphite Field" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" alt="Grafitowa struktura obrazu z bliska" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Graphite Field</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Quiet Carbon" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" alt="Pionowe zdjęcie abstrakcyjnej realizacji beatap.atelier" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Quiet Carbon</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Ash Relief" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" alt="Szary relief malarski na płótnie" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Ash Relief</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Anthracite Study" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" alt="Antracytowe płótno o wyraźnej fakturze" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Anthracite Study</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Concrete Veil" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" alt="Obraz abstrakcyjny inspirowany betonem i łupkiem" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Concrete Veil</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Soft Graphite" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" alt="Minimalistyczny obraz w chłodnych szarościach" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Soft Graphite</span><span>2026</span></span>
+          </button>
+          <button class="work" type="button" data-title="Coal Light" data-year="2026" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" data-reveal>
+            <img src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" alt="Ciemna tekstura malarska z subtelnym światłem" loading="lazy" decoding="async">
+            <span class="work__meta"><span>Coal Light</span><span>2026</span></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="zamowienia" aria-labelledby="commission-title">
+      <div class="commission page-shell">
+        <div data-reveal>
+          <p class="section__label">Obrazy na zamówienie</p>
+          <h2 id="commission-title">Praca tworzona dla konkretnego wnętrza</h2>
+        </div>
+        <div data-reveal>
+          <p class="hero__copy">Zamówienie zaczyna się od rozmowy o miejscu, wymiarze i nastroju. Na tej podstawie powstaje obraz dopasowany skalą, fakturą i temperaturą szarości.</p>
+          <div class="process" aria-label="Proces zamówienia">
+            <div class="process__item">
+              <strong>Rozmowa</strong>
+              <p>Krótki brief, zdjęcia wnętrza, preferowany format i kierunek pracy.</p>
+            </div>
+            <div class="process__item">
+              <strong>Kompozycja</strong>
+              <p>Dobór proporcji, ciężaru faktury i palety opartej na antracycie, grafitach oraz écru.</p>
+            </div>
+            <div class="process__item">
+              <strong>Realizacja</strong>
+              <p>Obraz powstaje warstwowo, z uwzględnieniem światła i rytmu przestrzeni, do której trafi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="kontakt" aria-labelledby="contact-title">
+      <div class="contact__grid page-shell" data-reveal>
+        <div>
+          <p class="section__label">Kontakt</p>
+          <h2 id="contact-title">Obrazy na zamówienie -> DM</h2>
+          <p class="contact__copy">Napisz wiadomość, jeśli chcesz zamówić obraz do wnętrza albo zapytać o dostępne prace.</p>
+        </div>
+        <div class="contact__details">
+          <a class="button" href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer">Napisz na Instagramie</a>
+          <span>beatap.atelier</span>
+          <a href="mailto:kontakt@beatap.atelier">kontakt@beatap.atelier</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page-shell">
+      <span>beatap.atelier</span>
+      <span>Malarstwo współczesne | Abstrakcje</span>
+    </div>
+  </footer>
+
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Podgląd pracy" aria-hidden="true">
+    <div class="lightbox__bar">
+      <span data-lightbox-count></span>
+      <button class="icon-button" type="button" data-close aria-label="Zamknij podgląd">×</button>
+    </div>
+    <div class="lightbox__stage">
+      <button class="lightbox__nav lightbox__nav--prev" type="button" data-prev aria-label="Poprzednia praca">←</button>
+      <img class="lightbox__image" src="" alt="">
+      <button class="lightbox__nav lightbox__nav--next" type="button" data-next aria-label="Następna praca">→</button>
+    </div>
+    <div class="lightbox__caption">
+      <span data-lightbox-title></span>
+      <span data-lightbox-year></span>
+    </div>
+  </div>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const nav = document.querySelector('.nav')
+    const heroTexture = document.querySelector('.hero__texture')
+    const revealItems = document.querySelectorAll('[data-reveal]')
+    const heroItems = document.querySelectorAll('[data-hero] > *')
+    const works = [...document.querySelectorAll('.work')]
+    const lightbox = document.querySelector('.lightbox')
+    const lightboxImage = document.querySelector('.lightbox__image')
+    const lightboxTitle = document.querySelector('[data-lightbox-title]')
+    const lightboxYear = document.querySelector('[data-lightbox-year]')
+    const lightboxCount = document.querySelector('[data-lightbox-count]')
+    const closeButton = document.querySelector('[data-close]')
+    const prevButton = document.querySelector('[data-prev]')
+    const nextButton = document.querySelector('[data-next]')
+    let activeIndex = 0
+    let lastFocusedElement = null
+
+    const syncNav = () => {
+      nav.classList.toggle('is-scrolled', window.scrollY > 24)
+      if (!prefersReducedMotion && heroTexture) {
+        heroTexture.style.setProperty('--parallax', `${window.scrollY * .08}px`)
+      }
+    }
+
+    const showWork = index => {
+      activeIndex = (index + works.length) % works.length
+      const work = works[activeIndex]
+      lightboxImage.classList.add('is-changing')
+      window.setTimeout(() => {
+        lightboxImage.src = work.dataset.src
+        lightboxImage.alt = work.querySelector('img').alt
+        lightboxTitle.textContent = work.dataset.title
+        lightboxYear.textContent = work.dataset.year
+        lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
+        lightboxImage.classList.remove('is-changing')
+      }, prefersReducedMotion ? 0 : 160)
+    }
+
+    const openLightbox = index => {
+      lastFocusedElement = document.activeElement
+      showWork(index)
+      lightbox.classList.add('is-open')
+      lightbox.setAttribute('aria-hidden', 'false')
+      document.body.style.overflow = 'hidden'
+      closeButton.focus()
+    }
+
+    const closeLightbox = () => {
+      lightbox.classList.remove('is-open')
+      lightbox.setAttribute('aria-hidden', 'true')
+      document.body.style.overflow = ''
+      lightboxImage.removeAttribute('src')
+      if (lastFocusedElement) lastFocusedElement.focus()
+    }
+
+    const trapFocus = event => {
+      if (!lightbox.classList.contains('is-open') || event.key !== 'Tab') return
+      const focusable = [...lightbox.querySelectorAll('button')]
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    if (!prefersReducedMotion) {
+      heroItems.forEach((item, index) => {
+        item.style.opacity = 0
+        item.style.transform = 'translateY(32px)'
+        window.setTimeout(() => {
+          item.style.transition = 'opacity 1.1s cubic-bezier(.19, 1, .22, 1), transform 1.1s cubic-bezier(.19, 1, .22, 1)'
+          item.style.opacity = 1
+          item.style.transform = 'translateY(0)'
+        }, 150 + index * 120)
+      })
+    }
+
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          revealObserver.unobserve(entry.target)
+        }
+      })
+    }, { threshold: .16, rootMargin: '0px 0px -8% 0px' })
+
+    revealItems.forEach(item => revealObserver.observe(item))
+    works.forEach((work, index) => work.addEventListener('click', () => openLightbox(index)))
+    closeButton.addEventListener('click', closeLightbox)
+    prevButton.addEventListener('click', () => showWork(activeIndex - 1))
+    nextButton.addEventListener('click', () => showWork(activeIndex + 1))
+    lightbox.addEventListener('click', event => {
+      if (event.target === lightbox) closeLightbox()
+    })
+    window.addEventListener('scroll', syncNav, { passive: true })
+    window.addEventListener('keydown', event => {
+      if (!lightbox.classList.contains('is-open')) return
+      if (event.key === 'Escape') closeLightbox()
+      if (event.key === 'ArrowLeft') showWork(activeIndex - 1)
+      if (event.key === 'ArrowRight') showWork(activeIndex + 1)
+      trapFocus(event)
+    })
+    syncNav()
+  </script>
+</body>
+</html>
