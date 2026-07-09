@@ -23,10 +23,23 @@ const browser = await puppeteer.launch({ executablePath, headless: 'shell', args
 const page = await browser.newPage()
 await page.setViewport({ width, height, deviceScaleFactor: 1 })
 await page.goto(url, { waitUntil: 'networkidle0' })
-await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-await new Promise(resolve => setTimeout(resolve, 1200))
+await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto' })
+await page.evaluate(async () => {
+  await new Promise(done => {
+    let y = 0
+    const step = () => {
+      const max = document.documentElement.scrollHeight - innerHeight
+      if (y >= max) return done()
+      y = Math.min(y + 350, max)
+      window.scrollTo(0, y)
+      setTimeout(step, 90)
+    }
+    step()
+  })
+})
+await new Promise(resolve => setTimeout(resolve, 1500))
 await page.evaluate(() => window.scrollTo(0, 0))
-await new Promise(resolve => setTimeout(resolve, 1200))
+await new Promise(resolve => setTimeout(resolve, 600))
 await page.screenshot({ path: target, fullPage: true })
 await browser.close()
 

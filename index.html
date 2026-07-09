@@ -101,6 +101,22 @@
       transition: background-color .45s var(--ease), border-color .45s var(--ease), padding .45s var(--ease);
     }
 
+    .nav::before {
+      position: absolute;
+      inset: -18px 0 auto;
+      z-index: -1;
+      height: 132px;
+      content: "";
+      pointer-events: none;
+      background: linear-gradient(180deg, hsl(var(--bg) / .55), transparent);
+      opacity: 1;
+      transition: opacity .45s var(--ease);
+    }
+
+    .nav.is-scrolled::before {
+      opacity: 0;
+    }
+
     .nav.is-scrolled {
       padding: 12px 0;
       border-bottom: 1px solid hsl(var(--line) / .08);
@@ -413,6 +429,7 @@
       font-weight: 600;
       letter-spacing: 0;
       line-height: .98;
+      text-wrap: balance;
     }
 
     h1 {
