@@ -102,6 +102,11 @@
       backdrop-filter: blur(18px);
     }
 
+    .nav.is-scrolled .brand {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .nav__inner {
       display: flex;
       align-items: center;
@@ -110,6 +115,9 @@
     }
 
     .brand {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s var(--ease);
       font-family: "Cormorant Garamond", serif;
       font-size: 24px;
       font-weight: 600;
@@ -158,13 +166,22 @@
 
     .hero {
       position: relative;
-      display: grid;
       min-height: 100svh;
       overflow: hidden;
       isolation: isolate;
-      place-items: end start;
-      padding: 118px 0 58px;
       background: hsl(var(--bg));
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .hero__texture {
@@ -199,24 +216,48 @@
       mix-blend-mode: soft-light;
     }
 
-    .hero__content {
-      position: relative;
-      display: block;
+    .hero__inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+    }
+
+    .hero__brand {
+      position: absolute;
+      top: clamp(26px, 5vw, 42px);
+      left: clamp(24px, 4.4vw, 48px);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
     .hero__mark {
-      width: clamp(82px, 14vw, 164px);
+      width: clamp(40px, 4.6vw, 54px);
       aspect-ratio: 1;
-      border: 1px solid hsl(var(--line) / .12);
+      border: 1px solid hsl(var(--line) / .18);
       object-fit: cover;
     }
 
-    .eyebrow {
-      margin: 0 0 18px;
-      color: hsl(var(--muted));
-      font-size: 11px;
+    .hero__brand-name {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(17px, 1.9vw, 21px);
       font-weight: 600;
-      letter-spacing: .2em;
+      letter-spacing: .02em;
+      color: hsl(var(--text));
+    }
+
+    .hero__eyebrow {
+      max-width: 640px;
+      margin: 0;
+      color: hsl(var(--muted));
+      text-align: center;
+      font-size: clamp(13px, 1.7vw, 17px);
+      font-weight: 600;
+      letter-spacing: .22em;
       text-transform: uppercase;
     }
 
@@ -256,37 +297,6 @@
     .placeholder-copy {
       filter: blur(6px);
       user-select: none;
-    }
-
-    .hero__side {
-      position: absolute;
-      right: 0;
-      bottom: 8px;
-      display: grid;
-      align-content: end;
-      justify-items: start;
-      gap: 26px;
-      padding-bottom: 0;
-    }
-
-    .scroll-cue {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: hsl(var(--muted));
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .17em;
-      text-transform: uppercase;
-    }
-
-    .scroll-cue::before {
-      width: 42px;
-      height: 1px;
-      content: "";
-      background: hsl(var(--muted) / .62);
-      transform-origin: left;
-      animation: cue 2.8s var(--ease) infinite;
     }
 
     .section {
@@ -705,18 +715,6 @@
       transform: translateY(0);
     }
 
-    @keyframes cue {
-      0%, 100% {
-        transform: scaleX(.38);
-        opacity: .45;
-      }
-
-      45% {
-        transform: scaleX(1);
-        opacity: 1;
-      }
-    }
-
     @media (min-width: 740px) {
       .gallery-grid {
         columns: 2;
@@ -738,26 +736,12 @@
         display: none;
       }
 
-      .hero {
-        padding: 104px 0 38px;
-      }
-
       .section__head,
       .about,
       .commission,
       .contact__grid,
       .contact-form__row {
         grid-template-columns: 1fr;
-      }
-
-      .hero__side {
-        position: static;
-        padding-bottom: 0;
-        margin-top: 34px;
-      }
-
-      .hero__mark {
-        width: 96px;
       }
 
       .about__image img {
@@ -792,10 +776,6 @@
     }
 
     @media (max-width: 520px) {
-      h1 {
-        font-size: clamp(58px, 17vw, 76px);
-      }
-
       .hero__copy {
         font-size: 18px;
       }
@@ -842,16 +822,13 @@
   <main>
     <section class="hero" id="start" aria-labelledby="hero-title">
       <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true">
-      <div class="hero__content page-shell" data-hero>
-        <div>
-          <p class="eyebrow">Malarstwo współczesne | Abstrakcje</p>
-          <h1 id="hero-title">beatap.atelier</h1>
-          <p class="hero__copy placeholder-copy">Teksturowane obrazy w odcieniach antracytu, grafitu i węgla, tworzone na zamówienie do spokojnych, świadomych wnętrz.</p>
-        </div>
-        <aside class="hero__side" aria-label="Monogram pracowni">
+      <h1 id="hero-title" class="sr-only">beatap.atelier — Malarstwo współczesne | Abstrakcje</h1>
+      <div class="hero__inner" data-hero>
+        <div class="hero__brand">
           <img class="hero__mark" src="logo.png" alt="Monogram BP">
-          <a class="scroll-cue" href="#o-mnie">Przewiń</a>
-        </aside>
+          <span class="hero__brand-name">beatap.atelier</span>
+        </div>
+        <p class="hero__eyebrow">Malarstwo współczesne | Abstrakcje</p>
       </div>
     </section>
 
