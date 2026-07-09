@@ -532,56 +532,121 @@
     }
 
     .gallery-grid {
-      columns: 1;
-      column-gap: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(14px, 1.6vw, 26px);
     }
 
     .work {
       position: relative;
       display: block;
       width: 100%;
-      margin: 0 0 18px;
+      margin: 0;
       overflow: hidden;
-      break-inside: avoid;
       border: 1px solid hsl(var(--line) / .07);
       border-radius: var(--radius);
       background: hsl(var(--primary));
       color: hsl(var(--text));
       cursor: zoom-in;
       padding: 0;
-      transition: transform .22s var(--ease-out), border-color .22s var(--ease-out), box-shadow .22s var(--ease-out);
+      will-change: transform;
+      transition: border-color .5s var(--ease-soft), box-shadow .5s var(--ease-soft);
+    }
+
+    .work::after {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      content: "";
+      pointer-events: none;
+      opacity: .55;
+      background: linear-gradient(180deg, transparent 42%, hsl(var(--bg) / .55));
+      transition: opacity .6s var(--ease-soft);
+    }
+
+    .work__frame {
+      display: block;
+      overflow: hidden;
+      height: 100%;
+      transform: translate3d(0, var(--drift, 0), 0);
     }
 
     .work img {
       width: 100%;
-      min-height: 260px;
+      height: 100%;
+      min-height: 280px;
       object-fit: cover;
-      filter: saturate(.78) brightness(.9);
-      transform: scale(1.001);
-      transition: transform .7s var(--ease-soft), filter .7s var(--ease-soft);
+      filter: saturate(.74) brightness(.86) contrast(1.04);
+      transform: scale(1.06);
+      will-change: transform;
+      transition: transform 1.1s var(--ease-soft), filter 1.1s var(--ease-soft);
+    }
+
+    .work__index {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      z-index: 2;
+      color: hsl(var(--text) / .82);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .5s var(--ease-soft), transform .5s var(--ease-soft);
     }
 
     @media (hover: hover) and (pointer: fine) {
       .work:hover {
-        transform: translateY(-3px);
-        border-color: hsl(var(--line) / .2);
+        border-color: hsl(var(--line) / .22);
         box-shadow: var(--shadow-lg);
       }
 
       .work:hover img {
-        filter: saturate(.9) brightness(1.05);
-        transform: scale(1.035);
+        filter: saturate(.92) brightness(1.02) contrast(1.06);
+        transform: scale(1.14);
+      }
+
+      .work:hover::after {
+        opacity: .28;
+      }
+
+      .work:hover .work__index {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
     .work:focus-visible img {
-      filter: saturate(.9) brightness(1.05);
-      transform: scale(1.035);
+      transform: scale(1.12);
+      filter: saturate(.92) brightness(1.02);
     }
 
-    .work:active {
-      transform: scale(.99);
-      transition-duration: .1s;
+    .work:focus-visible .work__index {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (min-width: 740px) {
+      .gallery-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 12vw;
+      }
+
+      .work {
+        grid-column: span 3;
+        grid-row: span 2;
+      }
+
+      .work:nth-child(1) { grid-column: span 4; grid-row: span 3; }
+      .work:nth-child(2) { grid-column: span 2; grid-row: span 3; }
+      .work:nth-child(3) { grid-column: span 2; grid-row: span 2; }
+      .work:nth-child(4) { grid-column: span 2; grid-row: span 2; }
+      .work:nth-child(5) { grid-column: span 2; grid-row: span 2; }
+      .work:nth-child(6) { grid-column: span 3; grid-row: span 3; }
+      .work:nth-child(7) { grid-column: span 3; grid-row: span 3; }
+      .work:nth-child(8) { grid-column: span 2; grid-row: span 3; }
+      .work:nth-child(9) { grid-column: span 4; grid-row: span 3; }
     }
 
     .commission {
@@ -994,12 +1059,6 @@
       max-width: min(100%, 1180px);
       max-height: 74svh;
       object-fit: contain;
-      opacity: 1;
-      transition: opacity .22s var(--ease);
-    }
-
-    .lightbox__image.is-changing {
-      opacity: 0;
     }
 
     .lightbox__nav {
@@ -1041,28 +1100,12 @@
       right: 8px;
     }
 
-    .reveal-ready [data-reveal] {
+    .reveal-ready [data-reveal],
+    .reveal-ready .work,
+    .reveal-ready [data-hero] > *,
+    .reveal-ready .hero__texture {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity .6s var(--ease-out), transform .6s var(--ease-out);
-    }
-
-    .reveal-ready [data-reveal].is-visible,
-    [data-reveal] {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (min-width: 740px) {
-      .gallery-grid {
-        columns: 2;
-      }
-    }
-
-    @media (min-width: 1080px) {
-      .gallery-grid {
-        columns: 3;
-      }
+      will-change: transform, opacity;
     }
 
     @media (max-width: 840px) {
@@ -1142,7 +1185,7 @@
       }
 
       .reveal-ready [data-reveal],
-      [data-reveal] {
+      .reveal-ready .work {
         opacity: 1;
         transform: none;
       }
@@ -1221,33 +1264,15 @@
         </header>
 
         <div class="gallery-grid" data-gallery>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" alt="Teksturowany obraz w odcieniach antracytu" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" alt="Abstrakcyjny obraz w jasnym wnętrzu" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" alt="Grafitowa struktura obrazu z bliska" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" alt="Pionowe zdjęcie abstrakcyjnej realizacji beatap.atelier" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" alt="Szary relief malarski na płótnie" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" alt="Antracytowe płótno o wyraźnej fakturze" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" alt="Obraz abstrakcyjny inspirowany betonem i łupkiem" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" alt="Minimalistyczny obraz w chłodnych szarościach" loading="lazy" decoding="async">
-          </button>
-          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" data-reveal>
-            <img src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" alt="Ciemna tekstura malarska z subtelnym światłem" loading="lazy" decoding="async">
-          </button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" alt="Teksturowany obraz w odcieniach antracytu" loading="lazy" decoding="async"></span><span class="work__index">01</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" alt="Abstrakcyjny obraz w jasnym wnętrzu" loading="lazy" decoding="async"></span><span class="work__index">02</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" alt="Grafitowa struktura obrazu z bliska" loading="lazy" decoding="async"></span><span class="work__index">03</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_711189317_1673119013761348_2517617514275611012_n.jpg" alt="Pionowe zdjęcie abstrakcyjnej realizacji beatap.atelier" loading="lazy" decoding="async"></span><span class="work__index">04</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_709755962_18129005470537354_1598493895872331801_n.webp" alt="Szary relief malarski na płótnie" loading="lazy" decoding="async"></span><span class="work__index">05</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_706123080_18129005461537354_9063727600122411612_n.webp" alt="Antracytowe płótno o wyraźnej fakturze" loading="lazy" decoding="async"></span><span class="work__index">06</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" alt="Obraz abstrakcyjny inspirowany betonem i łupkiem" loading="lazy" decoding="async"></span><span class="work__index">07</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" alt="Minimalistyczny obraz w chłodnych szarościach" loading="lazy" decoding="async"></span><span class="work__index">08</span></button>
+          <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" alt="Ciemna tekstura malarska z subtelnym światłem" loading="lazy" decoding="async"></span><span class="work__index">09</span></button>
         </div>
       </div>
     </section>
@@ -1347,6 +1372,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!prefersReducedMotion) document.documentElement.classList.add('reveal-ready')
@@ -1379,25 +1405,70 @@
       }
     }
 
-    const showWork = index => {
-      activeIndex = (index + works.length) % works.length
+    const galleryDrift = () => {
+      if (prefersReducedMotion || window.innerWidth < 740) return
+      const center = window.innerHeight / 2
+      works.forEach((work, index) => {
+        const rect = work.getBoundingClientRect()
+        if (rect.bottom < -200 || rect.top > window.innerHeight + 200) return
+        const offset = ((rect.top + rect.height / 2) - center) / center
+        work.style.setProperty('--drift', `${offset * (index % 3 === 1 ? -7 : 5)}px`)
+      })
+    }
+
+    const swapImage = direction => {
       const work = works[activeIndex]
-      lightboxImage.classList.add('is-changing')
-      window.setTimeout(() => {
+      const shift = direction === 0 ? 0 : direction * 40
+      if (prefersReducedMotion) {
         lightboxImage.src = work.dataset.src
         lightboxImage.alt = work.querySelector('img').alt
         lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
-        lightboxImage.classList.remove('is-changing')
-      }, prefersReducedMotion ? 0 : 160)
+        return
+      }
+      anime({
+        targets: lightboxImage,
+        opacity: 0,
+        translateX: -shift,
+        scale: .97,
+        duration: 220,
+        easing: 'easeInQuad',
+        complete: () => {
+          lightboxImage.src = work.dataset.src
+          lightboxImage.alt = work.querySelector('img').alt
+          lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
+          anime({
+            targets: lightboxImage,
+            opacity: [0, 1],
+            translateX: [shift, 0],
+            scale: [.97, 1],
+            duration: 620,
+            easing: 'cubicBezier(.16,1,.3,1)'
+          })
+        }
+      })
+    }
+
+    const showWork = (index, direction = 0) => {
+      activeIndex = (index + works.length) % works.length
+      swapImage(direction)
     }
 
     const openLightbox = index => {
       lastFocusedElement = document.activeElement
-      showWork(index)
       lightbox.classList.add('is-open')
       lightbox.setAttribute('aria-hidden', 'false')
       document.body.style.overflow = 'hidden'
+      showWork(index)
       closeButton.focus()
+      if (prefersReducedMotion) return
+      anime({
+        targets: [prevButton, nextButton, closeButton, lightboxCount],
+        opacity: [0, 1],
+        translateY: [10, 0],
+        delay: anime.stagger(50, { start: 120 }),
+        duration: 560,
+        easing: 'cubicBezier(.16,1,.3,1)'
+      })
     }
 
     const closeLightbox = () => {
@@ -1455,15 +1526,23 @@
       }
     }
 
+    const easeSoft = 'cubicBezier(.16,1,.3,1)'
+
     if (!prefersReducedMotion) {
-      heroItems.forEach((item, index) => {
-        item.style.opacity = 0
-        item.style.transform = 'translateY(32px)'
-        window.setTimeout(() => {
-          item.style.transition = 'opacity 1.1s cubic-bezier(.19, 1, .22, 1), transform 1.1s cubic-bezier(.19, 1, .22, 1)'
-          item.style.opacity = 1
-          item.style.transform = 'translateY(0)'
-        }, 150 + index * 120)
+      anime({
+        targets: heroItems,
+        opacity: [0, 1],
+        translateY: [34, 0],
+        filter: ['blur(10px)', 'blur(0px)'],
+        delay: anime.stagger(140, { start: 150 }),
+        duration: 1400,
+        easing: easeSoft
+      })
+      anime({
+        targets: heroTexture,
+        opacity: [0, 1],
+        duration: 1800,
+        easing: 'easeOutQuad'
       })
     }
 
@@ -1491,18 +1570,57 @@
 
     const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          revealObserver.unobserve(entry.target)
+        if (!entry.isIntersecting) return
+        revealObserver.unobserve(entry.target)
+        if (prefersReducedMotion) {
+          entry.target.style.opacity = 1
+          return
         }
+        anime({
+          targets: entry.target,
+          opacity: [0, 1],
+          translateY: [40, 0],
+          duration: 1100,
+          easing: easeSoft
+        })
       })
     }, { threshold: .16, rootMargin: '0px 0px -8% 0px' })
 
+    const galleryObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return
+        galleryObserver.unobserve(entry.target)
+        const index = works.indexOf(entry.target)
+        if (prefersReducedMotion) {
+          entry.target.style.opacity = 1
+          return
+        }
+        const fromLeft = index % 2 === 0
+        anime({
+          targets: entry.target,
+          opacity: [0, 1],
+          translateX: [fromLeft ? -64 : 64, 0],
+          translateY: [28, 0],
+          scale: [.94, 1],
+          rotate: [fromLeft ? -1.2 : 1.2, 0],
+          duration: 1250,
+          delay: (index % 3) * 90,
+          easing: easeSoft
+        })
+      })
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' })
+
     revealItems.forEach(item => revealObserver.observe(item))
-    works.forEach((work, index) => work.addEventListener('click', () => openLightbox(index)))
+    works.forEach((work, index) => {
+      galleryObserver.observe(work)
+      work.addEventListener('click', () => openLightbox(index))
+      work.addEventListener('pointerdown', () => anime({ targets: work, scale: .985, duration: 160, easing: 'easeOutQuad' }))
+      work.addEventListener('pointerup', () => anime({ targets: work, scale: 1, duration: 520, easing: 'spring(1, 90, 12, 0)' }))
+      work.addEventListener('pointerleave', () => anime({ targets: work, scale: 1, duration: 420, easing: 'easeOutQuad' }))
+    })
     closeButton.addEventListener('click', closeLightbox)
-    prevButton.addEventListener('click', () => showWork(activeIndex - 1))
-    nextButton.addEventListener('click', () => showWork(activeIndex + 1))
+    prevButton.addEventListener('click', () => showWork(activeIndex - 1, -1))
+    nextButton.addEventListener('click', () => showWork(activeIndex + 1, 1))
     lightbox.addEventListener('click', event => {
       if (event.target === lightbox) closeLightbox()
     })
@@ -1515,7 +1633,16 @@
     menuCloseButton.addEventListener('click', closeMobileNav)
     mobileNavBackdrop.addEventListener('click', closeMobileNav)
     mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileNav))
-    window.addEventListener('scroll', syncNav, { passive: true })
+    let ticking = false
+    window.addEventListener('scroll', () => {
+      syncNav()
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        galleryDrift()
+        ticking = false
+      })
+    }, { passive: true })
     window.addEventListener('keydown', event => {
       if (mobileNav.classList.contains('is-open')) {
         if (event.key === 'Escape') closeMobileNav()
@@ -1523,11 +1650,12 @@
       }
       if (!lightbox.classList.contains('is-open')) return
       if (event.key === 'Escape') closeLightbox()
-      if (event.key === 'ArrowLeft') showWork(activeIndex - 1)
-      if (event.key === 'ArrowRight') showWork(activeIndex + 1)
+      if (event.key === 'ArrowLeft') showWork(activeIndex - 1, -1)
+      if (event.key === 'ArrowRight') showWork(activeIndex + 1, 1)
       trapFocus(event)
     })
     syncNav()
+    galleryDrift()
   </script>
 </body>
 </html>
