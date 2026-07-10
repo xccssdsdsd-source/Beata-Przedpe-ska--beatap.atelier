@@ -544,19 +544,19 @@
       top: 0;
       bottom: 0;
       z-index: 3;
-      width: clamp(18px, 5vw, 90px);
+      width: max(18px, calc(50vw - 690px));
       content: "";
       pointer-events: none;
     }
 
     .gallery-carousel::before {
       left: 0;
-      background: linear-gradient(90deg, hsl(var(--bg)), hsl(var(--bg) / 0));
+      background: linear-gradient(90deg, hsl(var(--bg)) 55%, hsl(var(--bg) / 0));
     }
 
     .gallery-carousel::after {
       right: 0;
-      background: linear-gradient(270deg, hsl(var(--bg)), hsl(var(--bg) / 0));
+      background: linear-gradient(270deg, hsl(var(--bg)) 55%, hsl(var(--bg) / 0));
     }
 
     .gallery-track {
@@ -572,6 +572,16 @@
 
     .gallery-track::-webkit-scrollbar {
       display: none;
+    }
+
+    .gallery-track .work {
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-track .work {
+        opacity: 1;
+      }
     }
 
     .gallery-track.is-dragging {
@@ -592,10 +602,12 @@
 
     .gallery-progress {
       position: relative;
-      flex: 1;
-      height: 1px;
+      flex: 0 1 clamp(120px, 26vw, 300px);
+      margin-left: auto;
+      height: 2px;
       overflow: hidden;
-      background: hsl(var(--line) / .14);
+      border-radius: 999px;
+      background: hsl(var(--line) / .16);
     }
 
     .gallery-progress span {
@@ -603,8 +615,10 @@
       inset: 0;
       transform: scaleX(0);
       transform-origin: left center;
-      background: hsl(var(--line) / .62);
+      border-radius: inherit;
+      background: hsl(var(--text) / .75);
       will-change: transform;
+      transition: transform .35s var(--ease-soft);
     }
 
     .gallery-arrow {
@@ -682,7 +696,7 @@
       display: block;
       overflow: hidden;
       height: 100%;
-      transform: translate3d(var(--drift, 0), 0, 0);
+      transform: translate3d(var(--drift, 0), 0, 0) scale(var(--depth, 1)) skewX(var(--skew, 0deg));
       will-change: transform;
     }
 
@@ -742,25 +756,15 @@
     }
 
     @media (min-width: 740px) {
-      .gallery-grid {
-        grid-template-columns: repeat(6, 1fr);
-        grid-auto-rows: 12vw;
-      }
-
       .work {
-        grid-column: span 3;
-        grid-row: span 2;
+        flex-basis: clamp(300px, 26vw, 400px);
+        height: clamp(420px, 34vw, 540px);
+        scroll-snap-align: start;
       }
 
-      .work:nth-child(1) { grid-column: span 4; grid-row: span 3; }
-      .work:nth-child(2) { grid-column: span 2; grid-row: span 3; }
-      .work:nth-child(3) { grid-column: span 2; grid-row: span 2; }
-      .work:nth-child(4) { grid-column: span 2; grid-row: span 2; }
-      .work:nth-child(5) { grid-column: span 2; grid-row: span 2; }
-      .work:nth-child(6) { grid-column: span 3; grid-row: span 3; }
-      .work:nth-child(7) { grid-column: span 3; grid-row: span 3; }
-      .work:nth-child(8) { grid-column: span 2; grid-row: span 3; }
-      .work:nth-child(9) { grid-column: span 4; grid-row: span 3; }
+      .work:nth-child(3n + 2) {
+        flex-basis: clamp(240px, 20vw, 310px);
+      }
     }
 
     .commission {
@@ -1377,7 +1381,8 @@
           </div>
         </header>
 
-        <div class="gallery-grid" data-gallery>
+        <div class="gallery-carousel" data-gallery>
+          <div class="gallery-track" data-track role="region" aria-label="Karuzela realizacji" tabindex="0">
           <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_733935581_18134431933537354_475226073044608793_n.webp" alt="Teksturowany obraz w odcieniach antracytu" loading="lazy" decoding="async"></span><span class="work__index">01</span></button>
           <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_729674359_18134431942537354_4238444542853135654_n.webp" alt="Abstrakcyjny obraz w jasnym wnętrzu" loading="lazy" decoding="async"></span><span class="work__index">02</span></button>
           <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_727465654_18133804993537354_9203801953750143815_n.webp" alt="Grafitowa struktura obrazu z bliska" loading="lazy" decoding="async"></span><span class="work__index">03</span></button>
@@ -1387,6 +1392,13 @@
           <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_705528329_18129005452537354_4337414926339142985_n.webp" alt="Obraz abstrakcyjny inspirowany betonem i łupkiem" loading="lazy" decoding="async"></span><span class="work__index">07</span></button>
           <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_704882234_18128547151537354_31926847886789311_n.webp" alt="Minimalistyczny obraz w chłodnych szarościach" loading="lazy" decoding="async"></span><span class="work__index">08</span></button>
           <button class="work" type="button" data-src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp"><span class="work__frame"><img src="Images/ImageDownloader_www.instagram.com_692779937_18125062261537354_1835490060705635975_n.webp" alt="Ciemna tekstura malarska z subtelnym światłem" loading="lazy" decoding="async"></span><span class="work__index">09</span></button>
+          </div>
+        </div>
+
+        <div class="gallery-controls" data-reveal>
+          <button class="gallery-arrow" type="button" data-carousel-prev aria-label="Poprzednie prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="gallery-arrow" type="button" data-carousel-next aria-label="Następne prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="gallery-progress" role="presentation"><span data-carousel-progress></span></div>
         </div>
       </div>
     </section>
@@ -1519,15 +1531,51 @@
       }
     }
 
-    const galleryDrift = () => {
-      if (prefersReducedMotion || window.innerWidth < 740) return
-      const center = window.innerHeight / 2
+    const track = document.querySelector('[data-track]')
+    const prevWorks = document.querySelector('[data-carousel-prev]')
+    const nextWorks = document.querySelector('[data-carousel-next]')
+    const progressBar = document.querySelector('[data-carousel-progress]')
+
+    let lastScrollLeft = 0
+    let skew = 0
+
+    const carouselFrame = () => {
+      const max = track.scrollWidth - track.clientWidth
+      const ratio = max > 0 ? track.scrollLeft / max : 1
+      progressBar.style.transform = `scaleX(${Math.min(1, Math.max(.06, ratio))})`
+      prevWorks.disabled = track.scrollLeft <= 2
+      nextWorks.disabled = track.scrollLeft >= max - 2
+      if (prefersReducedMotion) return
+      const velocity = track.scrollLeft - lastScrollLeft
+      lastScrollLeft = track.scrollLeft
+      skew += (Math.max(-4, Math.min(4, velocity * -.12)) - skew) * .16
+      const trackRect = track.getBoundingClientRect()
+      const center = track.clientWidth / 2
       works.forEach((work, index) => {
         const rect = work.getBoundingClientRect()
-        if (rect.bottom < -200 || rect.top > window.innerHeight + 200) return
-        const offset = ((rect.top + rect.height / 2) - center) / center
-        work.style.setProperty('--drift', `${offset * (index % 3 === 1 ? -7 : 5)}px`)
+        if (rect.right < trackRect.left - 240 || rect.left > trackRect.right + 240) return
+        const offset = ((rect.left - trackRect.left) + rect.width / 2 - center) / center
+        work.style.setProperty('--drift', `${offset * (index % 3 === 1 ? -14 : 10)}px`)
+        work.style.setProperty('--depth', (1 - Math.min(Math.abs(offset), 1) * .05).toFixed(4))
+        work.style.setProperty('--skew', `${skew.toFixed(2)}deg`)
       })
+      if (Math.abs(skew) > .02) scheduleCarousel()
+    }
+
+    let carouselTicking = false
+    const scheduleCarousel = () => {
+      if (carouselTicking) return
+      carouselTicking = true
+      requestAnimationFrame(() => {
+        carouselTicking = false
+        carouselFrame()
+      })
+    }
+
+    const step = () => works[0].getBoundingClientRect().width + 20
+
+    const nudge = direction => {
+      track.scrollBy({ left: direction * step() * 1.5, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
     }
 
     const swapImage = direction => {
@@ -1709,16 +1757,15 @@
           entry.target.style.opacity = 1
           return
         }
-        const fromLeft = index % 2 === 0
         anime({
           targets: entry.target,
           opacity: [0, 1],
-          translateX: [fromLeft ? -64 : 64, 0],
-          translateY: [28, 0],
-          scale: [.94, 1],
-          rotate: [fromLeft ? -1.2 : 1.2, 0],
+          translateX: [72, 0],
+          translateY: [22, 0],
+          scale: [.92, 1],
+          rotate: [1.4, 0],
           duration: 1250,
-          delay: (index % 3) * 90,
+          delay: Math.min(index, 4) * 95,
           easing: easeSoft
         })
       })
@@ -1727,11 +1774,53 @@
     revealItems.forEach(item => revealObserver.observe(item))
     works.forEach((work, index) => {
       galleryObserver.observe(work)
-      work.addEventListener('click', () => openLightbox(index))
-      work.addEventListener('pointerdown', () => anime({ targets: work, scale: .985, duration: 160, easing: 'easeOutQuad' }))
-      work.addEventListener('pointerup', () => anime({ targets: work, scale: 1, duration: 520, easing: 'spring(1, 90, 12, 0)' }))
-      work.addEventListener('pointerleave', () => anime({ targets: work, scale: 1, duration: 420, easing: 'easeOutQuad' }))
+      work.addEventListener('click', () => {
+        if (dragMoved > 6) return
+        openLightbox(index)
+      })
     })
+
+    let pointerDownX = 0
+    let pointerScrollLeft = 0
+    let isDragging = false
+    let dragMoved = 0
+
+    track.addEventListener('pointerdown', event => {
+      if (event.button !== 0) return
+      isDragging = true
+      dragMoved = 0
+      pointerDownX = event.clientX
+      pointerScrollLeft = track.scrollLeft
+      track.setPointerCapture(event.pointerId)
+    })
+
+    track.addEventListener('pointermove', event => {
+      if (!isDragging) return
+      const delta = event.clientX - pointerDownX
+      dragMoved = Math.abs(delta)
+      if (dragMoved > 6) track.classList.add('is-dragging')
+      track.scrollLeft = pointerScrollLeft - delta
+    })
+
+    const endDrag = event => {
+      if (!isDragging) return
+      isDragging = false
+      track.releasePointerCapture(event.pointerId)
+      window.setTimeout(() => track.classList.remove('is-dragging'), 0)
+    }
+
+    track.addEventListener('pointerup', endDrag)
+    track.addEventListener('pointercancel', endDrag)
+
+    prevWorks.addEventListener('click', () => nudge(-1))
+    nextWorks.addEventListener('click', () => nudge(1))
+    track.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') nudge(-1)
+      if (event.key === 'ArrowRight') nudge(1)
+    })
+
+    track.addEventListener('scroll', scheduleCarousel, { passive: true })
+    window.addEventListener('resize', scheduleCarousel, { passive: true })
     closeButton.addEventListener('click', closeLightbox)
     prevButton.addEventListener('click', () => showWork(activeIndex - 1, -1))
     nextButton.addEventListener('click', () => showWork(activeIndex + 1, 1))
@@ -1747,16 +1836,7 @@
     menuCloseButton.addEventListener('click', closeMobileNav)
     mobileNavBackdrop.addEventListener('click', closeMobileNav)
     mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileNav))
-    let ticking = false
-    window.addEventListener('scroll', () => {
-      syncNav()
-      if (ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        galleryDrift()
-        ticking = false
-      })
-    }, { passive: true })
+    window.addEventListener('scroll', syncNav, { passive: true })
     window.addEventListener('keydown', event => {
       if (mobileNav.classList.contains('is-open')) {
         if (event.key === 'Escape') closeMobileNav()
@@ -1769,7 +1849,7 @@
       trapFocus(event)
     })
     syncNav()
-    galleryDrift()
-  </script>
+    carouselFrame()
+</script>
 </body>
 </html>
