@@ -12,7 +12,8 @@
   <style>
     :root {
       --bg: 210 9% 6%;
-      --surface: 38 28% 88%;
+      --surface: 40 16% 91%;
+      --surface-deep: 38 14% 86%;
       --primary: 210 8% 13%;
       --accent: 35 20% 80%;
       --text: 42 24% 92%;
@@ -427,7 +428,7 @@
       margin: 0;
       font-family: "Cormorant Garamond", serif;
       font-weight: 600;
-      letter-spacing: 0;
+      letter-spacing: -.018em;
       line-height: .98;
       text-wrap: balance;
     }
@@ -447,17 +448,62 @@
       font-size: clamp(30px, 4.8vw, 58px);
     }
 
-    .hero__copy {
-      max-width: 520px;
-      margin: 26px 0 0;
-      color: hsl(var(--accent));
-      font-size: clamp(18px, 2vw, 24px);
-      line-height: 1.45;
+    .lines {
+      display: grid;
+      gap: clamp(13px, 1.4vw, 19px);
+      max-width: 54ch;
+      margin: clamp(26px, 2.6vw, 34px) 0 0;
     }
 
-    .placeholder-copy {
-      filter: blur(6px);
-      user-select: none;
+    .lines span {
+      height: 1px;
+      background: currentColor;
+      opacity: .17;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 1.05s var(--ease-soft);
+    }
+
+    .lines.is-revealed span {
+      clip-path: inset(0 0 0 0);
+    }
+
+    .lines span:nth-child(1) { width: 100%; }
+    .lines span:nth-child(2) { width: 94%; }
+    .lines span:nth-child(3) { width: 98%; }
+    .lines span:nth-child(4) { width: 61%; }
+
+    .lines.is-revealed span:nth-child(2) { transition-delay: 90ms; }
+    .lines.is-revealed span:nth-child(3) { transition-delay: 180ms; }
+    .lines.is-revealed span:nth-child(4) { transition-delay: 270ms; }
+
+    .lines--lead {
+      gap: clamp(20px, 2.2vw, 30px);
+      max-width: 20ch;
+    }
+
+    .lines--lead span {
+      height: 2px;
+      opacity: .22;
+    }
+
+    .lines--lead span:nth-child(1) { width: 100%; }
+    .lines--lead span:nth-child(2) { width: 72%; }
+
+    .lines--tight {
+      gap: 11px;
+      max-width: 34ch;
+      margin-top: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lines span {
+        clip-path: inset(0 0 0 0);
+        transition: none;
+      }
+
+      .gallery-hint__dot {
+        animation: none;
+      }
     }
 
     .section {
@@ -465,8 +511,32 @@
     }
 
     .section--warm {
-      background: hsl(var(--surface));
+      position: relative;
+      isolation: isolate;
       color: hsl(var(--primary));
+      background:
+        radial-gradient(120% 90% at 78% 8%, hsl(var(--surface)) 0%, hsl(var(--surface-deep)) 100%);
+    }
+
+    .section--warm::before {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      content: "";
+      pointer-events: none;
+      opacity: .5;
+      background-image:
+        linear-gradient(hsl(var(--primary) / .05) 1px, transparent 1px);
+      background-size: 100% 46px;
+      mask-image: radial-gradient(80% 60% at 50% 50%, #000 0%, transparent 78%);
+    }
+
+    .section--warm::after {
+      position: absolute;
+      inset: auto 0 0;
+      height: 1px;
+      content: "";
+      background: linear-gradient(90deg, transparent, hsl(var(--primary) / .16), transparent);
     }
 
     .section__head {
@@ -495,23 +565,6 @@
 
     .about__text {
       max-width: 650px;
-    }
-
-    .lead {
-      margin: 26px 0 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(31px, 4.3vw, 58px);
-      font-weight: 500;
-      line-height: 1.08;
-      letter-spacing: 0;
-    }
-
-    .body-copy {
-      max-width: 64ch;
-      margin: 28px 0 0;
-      color: hsl(var(--primary) / .72);
-      font-size: 15px;
-      line-height: 1.85;
     }
 
     .about__image {
@@ -600,10 +653,55 @@
       margin-top: clamp(26px, 3vw, 44px);
     }
 
+    .gallery-hint {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 0 6px;
+      color: hsl(var(--text) / .5);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      transition: opacity .5s var(--ease-soft), transform .5s var(--ease-soft);
+    }
+
+    .gallery-hint__dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: hsl(var(--text) / .6);
+      animation: hint-pulse 2.4s var(--ease-soft) infinite;
+    }
+
+    @keyframes hint-pulse {
+      0%, 100% { transform: translateX(0); opacity: .5; }
+      50% { transform: translateX(6px); opacity: 1; }
+    }
+
+    .gallery-controls.is-touched .gallery-hint {
+      opacity: 0;
+      transform: translateX(-6px);
+      pointer-events: none;
+    }
+
+    .gallery-count {
+      margin: 0 0 0 auto;
+      color: hsl(var(--text) / .62);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gallery-count__sep {
+      margin: 0 7px;
+      opacity: .4;
+    }
+
     .gallery-progress {
       position: relative;
-      flex: 0 1 clamp(120px, 26vw, 300px);
-      margin-left: auto;
+      flex: 0 1 clamp(90px, 18vw, 220px);
       height: 2px;
       overflow: hidden;
       border-radius: 999px;
@@ -816,13 +914,6 @@
       grid-template-columns: minmax(0, 1.05fr) minmax(280px, .58fr);
       align-items: start;
       gap: clamp(40px, 7vw, 100px);
-    }
-
-    .contact__copy {
-      max-width: 780px;
-      margin: 26px 0 0;
-      color: hsl(var(--muted));
-      font-size: clamp(17px, 1.7vw, 22px);
     }
 
     .contact-form {
@@ -1279,16 +1370,8 @@
     }
 
     @media (max-width: 520px) {
-      .hero__copy {
-        font-size: 18px;
-      }
-
       .section {
         padding: 76px 0;
-      }
-
-      .work img {
-        min-height: 230px;
       }
     }
 
@@ -1362,8 +1445,8 @@
         <div class="about__text" data-reveal>
           <p class="section__label">O mnie</p>
           <h2 id="about-title">Materia, cisza i gest</h2>
-          <p class="lead placeholder-copy">Jestem projektantką wnętrz z pasją do piękna, funkcjonalności i detalu.</p>
-          <p class="body-copy placeholder-copy">Tworzę przestrzenie dopasowane do Ciebie, Twoich potrzeb, stylu życia i marzeń. Każdy projekt to dla mnie nowa historia, opowiedziana formą, kolorem i materiałem.</p>
+          <div class="lines lines--lead" data-lines role="presentation"><span></span><span></span></div>
+          <div class="lines" data-lines><span></span><span></span><span></span><span></span></div>
         </div>
         <figure class="about__image" data-reveal>
           <img src="Zdjęcie w sekcji O mnie.webp" alt="Obraz beatap.atelier w jasnym minimalistycznym wnętrzu" loading="lazy" decoding="async">
@@ -1377,7 +1460,7 @@
           <p class="section__label">Realizacje</p>
           <div>
             <h2 id="gallery-title">Galeria prac</h2>
-            <p class="hero__copy placeholder-copy">Matowe płótna, struktury zbliżeniowe i obrazy w aranżacjach wnętrz. Kliknij wybraną pracę, aby obejrzeć ją w powiększeniu.</p>
+            <div class="lines" data-lines><span></span><span></span><span></span></div>
           </div>
         </header>
 
@@ -1396,8 +1479,10 @@
         </div>
 
         <div class="gallery-controls" data-reveal>
-          <button class="gallery-arrow" type="button" data-carousel-prev aria-label="Poprzednie prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <button class="gallery-arrow" type="button" data-carousel-next aria-label="Następne prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          <button class="gallery-arrow" type="button" data-carousel-prev aria-label="Poprzednie prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="gallery-arrow" type="button" data-carousel-next aria-label="Następne prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          <p class="gallery-hint" data-carousel-hint><span class="gallery-hint__dot"></span>Przeciągnij, aby zobaczyć więcej</p>
+          <p class="gallery-count"><span data-carousel-index>01</span><span class="gallery-count__sep">/</span><span data-carousel-total>09</span></p>
           <div class="gallery-progress" role="presentation"><span data-carousel-progress></span></div>
         </div>
       </div>
@@ -1410,19 +1495,19 @@
           <h2 id="commission-title">Praca tworzona dla konkretnego wnętrza</h2>
         </div>
         <div data-reveal>
-          <p class="hero__copy placeholder-copy">Zamówienie zaczyna się od rozmowy o miejscu, wymiarze i nastroju. Na tej podstawie powstaje obraz dopasowany skalą, fakturą i temperaturą szarości.</p>
+          <div class="lines" data-lines><span></span><span></span><span></span></div>
           <div class="process" aria-label="Proces zamówienia">
             <div class="process__item">
               <strong>Rozmowa</strong>
-              <p class="placeholder-copy">Krótki brief, zdjęcia wnętrza, preferowany format i kierunek pracy.</p>
+              <div class="lines lines--tight" data-lines><span></span><span></span></div>
             </div>
             <div class="process__item">
               <strong>Kompozycja</strong>
-              <p class="placeholder-copy">Dobór proporcji, ciężaru faktury i palety opartej na antracycie, grafitach oraz écru.</p>
+              <div class="lines lines--tight" data-lines><span></span><span></span></div>
             </div>
             <div class="process__item">
               <strong>Realizacja</strong>
-              <p class="placeholder-copy">Obraz powstaje warstwowo, z uwzględnieniem światła i rytmu przestrzeni, do której trafi.</p>
+              <div class="lines lines--tight" data-lines><span></span><span></span></div>
             </div>
           </div>
         </div>
@@ -1434,7 +1519,7 @@
         <div>
           <p class="section__label">Kontakt</p>
           <h2 id="contact-title">Obrazy na zamówienie -> DM</h2>
-          <p class="contact__copy placeholder-copy">Napisz wiadomość, jeśli chcesz zamówić obraz do wnętrza albo zapytać o dostępne prace.</p>
+          <div class="lines" data-lines><span></span><span></span><span></span></div>
 
           <form class="contact-form" data-contact-form novalidate>
             <div class="contact-form__row">
@@ -1535,6 +1620,10 @@
     const prevWorks = document.querySelector('[data-carousel-prev]')
     const nextWorks = document.querySelector('[data-carousel-next]')
     const progressBar = document.querySelector('[data-carousel-progress]')
+    const carouselControls = document.querySelector('.gallery-controls')
+    const carouselIndex = document.querySelector('[data-carousel-index]')
+    const pad = value => String(value).padStart(2, '0')
+    document.querySelector('[data-carousel-total]').textContent = pad(works.length)
 
     let lastScrollLeft = 0
     let skew = 0
@@ -1545,6 +1634,8 @@
       progressBar.style.transform = `scaleX(${Math.min(1, Math.max(.06, ratio))})`
       prevWorks.disabled = track.scrollLeft <= 2
       nextWorks.disabled = track.scrollLeft >= max - 2
+      const leading = works.findIndex(work => work.offsetLeft + work.offsetWidth * .5 > track.scrollLeft)
+      carouselIndex.textContent = pad(leading === -1 ? works.length : leading + 1)
       if (prefersReducedMotion) return
       const velocity = track.scrollLeft - lastScrollLeft
       lastScrollLeft = track.scrollLeft
@@ -1821,6 +1912,23 @@
 
     track.addEventListener('scroll', scheduleCarousel, { passive: true })
     window.addEventListener('resize', scheduleCarousel, { passive: true })
+
+    const dismissHint = () => carouselControls.classList.add('is-touched')
+    track.addEventListener('pointerdown', dismissHint)
+    track.addEventListener('wheel', dismissHint, { passive: true })
+    track.addEventListener('touchstart', dismissHint, { passive: true })
+    prevWorks.addEventListener('click', dismissHint)
+    nextWorks.addEventListener('click', dismissHint)
+
+    const linesObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return
+        linesObserver.unobserve(entry.target)
+        entry.target.classList.add('is-revealed')
+      })
+    }, { threshold: .3 })
+
+    document.querySelectorAll('[data-lines]').forEach(group => linesObserver.observe(group))
     closeButton.addEventListener('click', closeLightbox)
     prevButton.addEventListener('click', () => showWork(activeIndex - 1, -1))
     nextButton.addEventListener('click', () => showWork(activeIndex + 1, 1))
