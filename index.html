@@ -1642,6 +1642,18 @@
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!prefersReducedMotion) document.documentElement.classList.add('reveal-ready')
+
+    const anime = window.anime || (() => {
+      const fallback = opts => {
+        const targets = opts.targets
+        const list = targets instanceof NodeList || Array.isArray(targets) ? [...targets] : [targets]
+        list.forEach(el => { if (el && el.style) el.style.opacity = 1 })
+        if (typeof opts.complete === 'function') opts.complete()
+        return {}
+      }
+      fallback.stagger = () => 0
+      return fallback
+    })()
     const nav = document.querySelector('.nav')
     const heroTexture = document.querySelector('.hero__texture')
     const revealItems = document.querySelectorAll('[data-reveal]')
