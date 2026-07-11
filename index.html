@@ -1977,27 +1977,38 @@
 
     track.addEventListener('dragstart', event => event.preventDefault())
 
+    let trackPointerId = null
+    let trackCaptured = false
+
     track.addEventListener('pointerdown', event => {
       if (event.button !== 0) return
       isDragging = true
+      trackCaptured = false
+      trackPointerId = event.pointerId
       dragMoved = 0
       pointerDownX = event.clientX
       pointerScrollLeft = track.scrollLeft
-      track.setPointerCapture(event.pointerId)
     })
 
     track.addEventListener('pointermove', event => {
       if (!isDragging) return
       const delta = event.clientX - pointerDownX
       dragMoved = Math.max(dragMoved, Math.abs(delta))
-      if (dragMoved > 6) track.classList.add('is-dragging')
-      track.scrollLeft = pointerScrollLeft - delta
+      if (dragMoved > 6) {
+        if (!trackCaptured) {
+          trackCaptured = true
+          track.setPointerCapture(trackPointerId)
+        }
+        track.classList.add('is-dragging')
+        track.scrollLeft = pointerScrollLeft - delta
+      }
     })
 
     const endDrag = event => {
       if (!isDragging) return
       isDragging = false
-      track.releasePointerCapture(event.pointerId)
+      if (trackCaptured) track.releasePointerCapture(event.pointerId)
+      trackCaptured = false
       window.setTimeout(() => track.classList.remove('is-dragging'), 0)
     }
 
@@ -2043,6 +2054,7 @@
     let stagePointerId = null
     let stageDownX = 0
     let stageDragMoved = 0
+    let stageCaptured = false
 
     lightboxStage.addEventListener('dragstart', event => event.preventDefault())
 
@@ -2051,15 +2063,21 @@
       stagePointerId = event.pointerId
       stageDownX = event.clientX
       stageDragMoved = 0
-      lightboxStage.classList.add('is-dragging')
-      lightboxStage.setPointerCapture(event.pointerId)
+      stageCaptured = false
     })
 
     lightboxStage.addEventListener('pointermove', event => {
       if (stagePointerId === null) return
       const delta = event.clientX - stageDownX
       stageDragMoved = delta
-      lightboxImage.style.transform = `translateX(${delta}px)`
+      if (Math.abs(delta) > 6) {
+        if (!stageCaptured) {
+          stageCaptured = true
+          lightboxStage.setPointerCapture(stagePointerId)
+          lightboxStage.classList.add('is-dragging')
+        }
+        lightboxImage.style.transform = `translateX(${delta}px)`
+      }
     })
 
     const endStageDrag = event => {
@@ -2069,6 +2087,8 @@
       const threshold = 60
       if (stageDragMoved > threshold) showWork(activeIndex - 1, -1)
       else if (stageDragMoved < -threshold) showWork(activeIndex + 1, 1)
+      if (stageCaptured) lightboxStage.releasePointerCapture(event.pointerId)
+      stageCaptured = false
       stagePointerId = null
       stageDragMoved = 0
     }
