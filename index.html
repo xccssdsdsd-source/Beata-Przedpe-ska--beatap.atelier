@@ -822,6 +822,9 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-select: none;
       object-position: center;
       filter: saturate(.8) brightness(.95) contrast(1.03);
       transform: scale(1.04);
@@ -1962,11 +1965,17 @@
     revealItems.forEach(item => revealObserver.observe(item))
     cards.forEach(card => {
       galleryObserver.observe(card)
-      card.addEventListener('click', () => {
-        if (dragMoved > 6) return
+      card.addEventListener('click', event => {
+        if (dragMoved > 6) {
+          event.preventDefault()
+          event.stopPropagation()
+          return
+        }
         openLightbox(Number(card.dataset.index))
       })
     })
+
+    track.addEventListener('dragstart', event => event.preventDefault())
 
     track.addEventListener('pointerdown', event => {
       if (event.button !== 0) return
@@ -1980,7 +1989,7 @@
     track.addEventListener('pointermove', event => {
       if (!isDragging) return
       const delta = event.clientX - pointerDownX
-      dragMoved = Math.abs(delta)
+      dragMoved = Math.max(dragMoved, Math.abs(delta))
       if (dragMoved > 6) track.classList.add('is-dragging')
       track.scrollLeft = pointerScrollLeft - delta
     })
@@ -2034,6 +2043,8 @@
     let stagePointerId = null
     let stageDownX = 0
     let stageDragMoved = 0
+
+    lightboxStage.addEventListener('dragstart', event => event.preventDefault())
 
     lightboxStage.addEventListener('pointerdown', event => {
       if (event.button !== 0 || event.target !== lightboxImage) return
