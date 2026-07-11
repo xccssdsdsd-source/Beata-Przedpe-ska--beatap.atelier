@@ -1307,12 +1307,20 @@
       min-height: 0;
       align-items: center;
       justify-items: center;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+
+    .lightbox__stage.is-dragging {
+      cursor: grabbing;
     }
 
     .lightbox__image {
       max-width: min(100%, 1180px);
       max-height: 74svh;
       object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .lightbox__nav {
@@ -1643,6 +1651,7 @@
     const closeButton = document.querySelector('[data-close]')
     const prevButton = document.querySelector('[data-prev]')
     const nextButton = document.querySelector('[data-next]')
+    const lightboxStage = document.querySelector('.lightbox__stage')
     const contactForm = document.querySelector('[data-contact-form]')
     const contactFormNote = document.querySelector('[data-contact-form-note]')
     const navToggle = document.querySelector('[data-menu-open]')
@@ -2021,6 +2030,40 @@
     lightbox.addEventListener('click', event => {
       if (event.target === lightbox) closeLightbox()
     })
+
+    let stagePointerId = null
+    let stageDownX = 0
+    let stageDragMoved = 0
+
+    lightboxStage.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || event.target !== lightboxImage) return
+      stagePointerId = event.pointerId
+      stageDownX = event.clientX
+      stageDragMoved = 0
+      lightboxStage.classList.add('is-dragging')
+      lightboxStage.setPointerCapture(event.pointerId)
+    })
+
+    lightboxStage.addEventListener('pointermove', event => {
+      if (stagePointerId === null) return
+      const delta = event.clientX - stageDownX
+      stageDragMoved = delta
+      lightboxImage.style.transform = `translateX(${delta}px)`
+    })
+
+    const endStageDrag = event => {
+      if (stagePointerId === null) return
+      lightboxStage.classList.remove('is-dragging')
+      lightboxImage.style.transform = ''
+      const threshold = 60
+      if (stageDragMoved > threshold) showWork(activeIndex - 1, -1)
+      else if (stageDragMoved < -threshold) showWork(activeIndex + 1, 1)
+      stagePointerId = null
+      stageDragMoved = 0
+    }
+
+    lightboxStage.addEventListener('pointerup', endStageDrag)
+    lightboxStage.addEventListener('pointercancel', endStageDrag)
     contactForm.addEventListener('submit', event => {
       event.preventDefault()
       contactFormNote.hidden = false
