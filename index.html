@@ -435,6 +435,21 @@
       text-shadow: 0 8px 36px hsl(var(--bg) / .72);
     }
 
+    .hero__eyebrow.is-typing::after {
+      content: '';
+      display: inline-block;
+      width: 2px;
+      height: .78em;
+      margin-left: 4px;
+      background: currentColor;
+      vertical-align: -0.08em;
+      animation: blink-cursor .8s steps(1) infinite;
+    }
+
+    @keyframes blink-cursor {
+      50% { opacity: 0; }
+    }
+
     h1,
     h2,
     h3 {
@@ -1561,15 +1576,9 @@
     }
 
     .reveal-ready [data-reveal],
-    .reveal-ready .work,
-    .reveal-ready [data-hero] > * {
+    .reveal-ready .work {
       opacity: 0;
       will-change: transform, opacity;
-    }
-
-    .reveal-ready .hero__texture {
-      opacity: 0;
-      will-change: opacity;
     }
 
     @media (max-width: 840px) {
@@ -1773,10 +1782,6 @@
         transform: none;
         filter: none;
       }
-
-      .reveal-ready .hero__texture {
-        opacity: 1;
-      }
     }
   </style>
 </head>
@@ -1825,7 +1830,31 @@
           <img class="hero__mark" src="logo-optimized.jpg" alt="Monogram BP">
           <span class="hero__brand-name">beatap.atelier</span>
         </div>
-        <p class="hero__eyebrow">Malarstwo współczesne Abstrakcje</p>
+        <p class="hero__eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
+        <script>
+          ;(() => {
+            const typewriterEl = document.currentScript.previousElementSibling
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            if (!typewriterEl || prefersReducedMotion) return
+
+            const typewriterText = typewriterEl.textContent.trim()
+            let typewriterIndex = 0
+            typewriterEl.textContent = ''
+            typewriterEl.setAttribute('aria-label', typewriterText)
+            typewriterEl.classList.add('is-typing')
+
+            const typeNextCharacter = () => {
+              typewriterEl.textContent = typewriterText.slice(0, ++typewriterIndex)
+              if (typewriterIndex < typewriterText.length) {
+                window.setTimeout(typeNextCharacter, typewriterText[typewriterIndex] === ' ' ? 105 : 52)
+                return
+              }
+              window.setTimeout(() => typewriterEl.classList.remove('is-typing'), 700)
+            }
+
+            window.setTimeout(typeNextCharacter, 260)
+          })()
+        </script>
       </div>
     </section>
 
@@ -2022,7 +2051,6 @@
     const heroTexture = document.querySelector('.hero__texture')
     const isMobileLayout = window.matchMedia('(max-width: 840px)').matches
     const revealItems = [...document.querySelectorAll('[data-reveal]')].filter(item => !(isMobileLayout && item.closest('#o-mnie')))
-    const heroItems = document.querySelectorAll('[data-hero] > *')
     const works = [...document.querySelectorAll('.work')]
     works.forEach((work, index) => { work.dataset.index = index })
     const lightbox = document.querySelector('.lightbox')
@@ -2290,23 +2318,6 @@
         element.addEventListener('pointerenter', () => {
           element.style.setProperty('--scale', '1.01')
         })
-      })
-    }
-
-    if (!prefersReducedMotion) {
-      anime({
-        targets: heroItems,
-        opacity: [0, 1],
-        translateY: [16, 0],
-        delay: anime.stagger(90, { start: 80 }),
-        duration: 720,
-        easing: easeSoft
-      })
-      anime({
-        targets: heroTexture,
-        opacity: [0, 1],
-        duration: 900,
-        easing: 'easeOutQuad'
       })
     }
 
