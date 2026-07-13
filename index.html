@@ -9,6 +9,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.png" type="image/png">
+  <script>
+    ;(() => {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('reveal-ready')
+      }
+    })()
+  </script>
   <style>
     :root {
       --bg: 210 9% 6%;
@@ -1573,7 +1580,6 @@
     .reveal-ready [data-hero] > * {
       opacity: 0;
       will-change: transform, opacity;
-      filter: blur(10px);
     }
 
     .reveal-ready .hero__texture {
@@ -2014,7 +2020,7 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (!prefersReducedMotion) document.documentElement.classList.add('reveal-ready')
+    if (prefersReducedMotion) document.documentElement.classList.remove('reveal-ready')
 
     const anime = window.anime || (() => {
       const fallback = opts => {
@@ -2306,38 +2312,17 @@
       anime({
         targets: heroItems,
         opacity: [0, 1],
-        translateY: [28, 0],
-        scale: [.98, 1],
-        filter: ['blur(10px)', 'blur(0px)'],
-        delay: anime.stagger(140, { start: 150 }),
-        duration: 1400,
+        translateY: [16, 0],
+        delay: anime.stagger(90, { start: 80 }),
+        duration: 720,
         easing: easeSoft
       })
       anime({
         targets: heroTexture,
         opacity: [0, 1],
-        filter: ['blur(10px)', 'blur(0px)'],
-        duration: 1800,
+        duration: 900,
         easing: 'easeOutQuad'
       })
-    }
-
-    const typewriterEl = document.querySelector('[data-typewriter]')
-    if (typewriterEl && !prefersReducedMotion) {
-      const typewriterText = typewriterEl.textContent.trim()
-      let typewriterIndex = 0
-      typewriterEl.textContent = ''
-      typewriterEl.setAttribute('aria-label', typewriterText)
-      typewriterEl.classList.add('is-typing')
-      const typeNextCharacter = () => {
-        typewriterEl.textContent = typewriterText.slice(0, ++typewriterIndex)
-        if (typewriterIndex < typewriterText.length) {
-          window.setTimeout(typeNextCharacter, typewriterText[typewriterIndex] === ' ' ? 110 : 58)
-          return
-        }
-        window.setTimeout(() => typewriterEl.classList.remove('is-typing'), 900)
-      }
-      window.setTimeout(typeNextCharacter, 720)
     }
 
     const revealObserver = new IntersectionObserver(entries => {
@@ -2351,10 +2336,8 @@
         anime({
           targets: entry.target,
           opacity: [0, 1],
-          translateY: [40, 0],
-          scale: [.98, 1],
-          filter: ['blur(10px)', 'blur(0px)'],
-          duration: 1100,
+          translateY: [22, 0],
+          duration: 680,
           easing: easeSoft
         })
       })
@@ -2372,11 +2355,9 @@
         anime({
           targets: entry.target,
           opacity: [0, 1],
-          translateY: [28, 0],
-          scale: [.96, 1],
-          filter: ['blur(10px)', 'blur(0px)'],
-          duration: 1250,
-          delay: Math.min(revealedCards++, 4) * 95,
+          translateY: [18, 0],
+          duration: 720,
+          delay: Math.min(revealedCards++, 4) * 55,
           easing: easeSoft
         })
       })
