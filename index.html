@@ -463,9 +463,9 @@
     h2 {
       width: min(100%, 760px);
       max-width: none;
-      margin-inline: auto;
+      margin-inline: 0;
       color: hsl(var(--accent));
-      text-align: center;
+      text-align: left;
       font-size: clamp(36px, 4.2vw, 58px);
       line-height: 1.04;
       letter-spacing: -.032em;
@@ -570,10 +570,10 @@
     .section__head {
       display: grid;
       grid-template-columns: 1fr;
-      justify-items: center;
+      justify-items: start;
       gap: 16px;
       margin-bottom: clamp(44px, 7vw, 86px);
-      text-align: center;
+      text-align: left;
     }
 
     .section__label {
@@ -596,12 +596,12 @@
     .about__text {
       width: min(100%, 900px);
       max-width: none;
-      text-align: center;
+      text-align: left;
     }
 
     .about__text .lines {
-      justify-items: center;
-      margin-inline: auto;
+      justify-items: start;
+      margin-inline: 0;
     }
 
     .about__image {
@@ -986,26 +986,27 @@
 
     .commission {
       display: grid;
-      justify-items: center;
+      justify-items: stretch;
       gap: clamp(52px, 6vw, 96px);
     }
 
     .commission__head {
+      width: 100%;
       max-width: 900px;
-      text-align: center;
+      text-align: left;
     }
 
     .commission__head h2 {
-      margin-inline: auto;
+      margin-inline: 0;
     }
 
     .commission__head .lines {
-      justify-items: center;
-      margin-inline: auto;
+      justify-items: start;
+      margin-inline: 0;
     }
 
     .commission__head .lines span {
-      justify-self: center;
+      justify-self: start;
     }
 
     .process {
@@ -1068,23 +1069,24 @@
 
     .pricing__layout {
       display: grid;
-      justify-items: center;
+      justify-items: stretch;
       gap: clamp(36px, 6vw, 72px);
     }
 
     .pricing__head {
-      text-align: center;
+      width: 100%;
+      text-align: left;
       max-width: 900px;
     }
 
     .pricing__head h2 {
       max-width: 520px;
-      margin-inline: auto;
+      margin-inline: 0;
     }
 
     .pricing__head .lines {
-      justify-items: center;
-      margin-inline: auto;
+      justify-items: start;
+      margin-inline: 0;
     }
 
     .pricing__list {
