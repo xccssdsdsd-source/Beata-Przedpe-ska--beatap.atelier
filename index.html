@@ -52,6 +52,25 @@
       letter-spacing: .01em;
     }
 
+    body::after {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      content: "";
+      opacity: .38;
+      background:
+        radial-gradient(circle at 50% 14%, transparent 0 34%, hsl(var(--bg) / .06) 58%, hsl(var(--bg) / .22) 100%),
+        radial-gradient(circle at 84% 0%, hsl(var(--accent) / .08), transparent 28%),
+        radial-gradient(circle at 0% 96%, hsl(var(--text) / .06), transparent 26%);
+      mix-blend-mode: screen;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
     body::before {
       position: fixed;
       inset: 0;
@@ -365,7 +384,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 24px;
+      padding: 0 24px 40px;
     }
 
     .hero__brand {
@@ -376,6 +395,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      text-shadow: 0 10px 30px hsl(var(--bg) / .42);
     }
 
     .hero__mark {
@@ -384,6 +404,7 @@
       border: 1px solid hsl(var(--line) / .18);
       border-radius: var(--radius);
       object-fit: cover;
+      box-shadow: 0 10px 30px hsl(var(--bg) / .24);
     }
 
     .hero__brand-name {
@@ -395,16 +416,16 @@
     }
 
     .hero__eyebrow {
-      max-width: 920px;
+      max-width: 780px;
       margin: 0;
       color: hsl(var(--text));
       text-align: center;
       font-family: Fraunces, serif;
       font-size: clamp(30px, 5.2vw, 68px);
       font-weight: 600;
-      line-height: 1.1;
+      line-height: .98;
       letter-spacing: -.01em;
-      text-shadow: 0 6px 34px hsl(var(--bg) / .6);
+      text-shadow: 0 8px 36px hsl(var(--bg) / .72);
     }
 
     .hero__eyebrow.is-typing::after {
@@ -508,6 +529,7 @@
 
     .section {
       padding: clamp(86px, 12vw, 170px) 0;
+      scroll-margin-top: 112px;
     }
 
     .section--warm {
@@ -544,6 +566,7 @@
       grid-template-columns: minmax(140px, .32fr) minmax(0, 1fr);
       gap: clamp(28px, 8vw, 120px);
       margin-bottom: clamp(44px, 7vw, 86px);
+      align-items: end;
     }
 
     .section__label {
@@ -558,9 +581,9 @@
 
     .about {
       display: grid;
-      grid-template-columns: minmax(0, .82fr) minmax(320px, .74fr);
+      grid-template-columns: minmax(0, .88fr) minmax(320px, .72fr);
       align-items: center;
-      gap: clamp(38px, 8vw, 112px);
+      gap: clamp(34px, 7vw, 100px);
     }
 
     .about__text {
@@ -715,7 +738,7 @@
       transform: scaleX(0);
       transform-origin: left center;
       border-radius: inherit;
-      background: hsl(var(--text) / .75);
+      background: linear-gradient(90deg, hsl(var(--accent) / .58), hsl(var(--text) / .82));
       will-change: transform;
     }
 
@@ -727,9 +750,9 @@
       width: 46px;
       height: 46px;
       padding: 0;
-      border: 1px solid hsl(var(--line) / .18);
+      border: 1px solid hsl(var(--accent) / .22);
       border-radius: 999px;
-      background: transparent;
+      background: hsl(var(--line) / .025);
       color: hsl(var(--text));
       cursor: pointer;
       transition: transform .55s var(--ease-soft), border-color .4s var(--ease-soft), background-color .4s var(--ease-soft), opacity .4s var(--ease-soft);
@@ -756,6 +779,10 @@
     }
 
     .work {
+      --lift: 0px;
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      --scale: 1;
       position: relative;
       display: block;
       flex: 0 0 clamp(238px, 72vw, 300px);
@@ -769,8 +796,21 @@
       color: hsl(var(--text));
       cursor: zoom-in;
       padding: 0;
+      transform-style: preserve-3d;
+      transform: translate3d(0, var(--lift), 0) perspective(1200px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) scale(var(--scale));
       will-change: transform;
-      transition: border-color .5s var(--ease-soft), box-shadow .5s var(--ease-soft);
+      transition: transform .32s var(--ease-soft), border-color .5s var(--ease-soft), box-shadow .5s var(--ease-soft);
+    }
+
+    .work::before {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      content: "";
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 18%, hsl(var(--text) / .12), transparent 46%);
+      transition: opacity .55s var(--ease-soft);
     }
 
     .work::after {
@@ -816,6 +856,7 @@
       height: 100%;
       transform: translate3d(var(--drift, 0), 0, 0) scale(var(--depth, 1)) skewX(var(--skew, 0deg));
       will-change: transform;
+      backface-visibility: hidden;
     }
 
     .work img {
@@ -829,7 +870,7 @@
       filter: saturate(.8) brightness(.95) contrast(1.03);
       transform: scale(1.04);
       will-change: transform;
-      transition: transform 1.1s var(--ease-soft), filter 1.1s var(--ease-soft);
+      transition: transform .95s var(--ease-soft), filter .95s var(--ease-soft);
     }
 
     .work__index {
@@ -846,15 +887,53 @@
       transition: opacity .5s var(--ease-soft), transform .5s var(--ease-soft);
     }
 
+    .work__caption {
+      position: absolute;
+      left: 16px;
+      right: 58px;
+      bottom: 36px;
+      z-index: 2;
+      display: grid;
+      gap: 4px;
+      color: hsl(var(--text));
+      text-align: left;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .5s var(--ease-soft), transform .5s var(--ease-soft);
+    }
+
+    .work__caption strong {
+      font-family: Fraunces, serif;
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -.015em;
+    }
+
+    .work__caption span {
+      color: hsl(var(--muted));
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
     @media (hover: hover) and (pointer: fine) {
       .work:hover {
         border-color: hsl(var(--line) / .22);
         box-shadow: var(--shadow-lg);
+        --lift: -4px;
+        --scale: 1.01;
       }
 
       .work:hover img {
         filter: saturate(.95) brightness(1.05) contrast(1.05);
         transform: scale(1.11);
+      }
+
+      .work:hover::before {
+        opacity: 1;
       }
 
       .work:hover::after {
@@ -928,6 +1007,7 @@
       position: relative;
       padding: clamp(32px, 3.2vw, 48px) clamp(24px, 2.4vw, 40px);
       background: hsl(var(--bg));
+      overflow: hidden;
       transition: background-color .25s var(--ease-out);
     }
 
@@ -957,6 +1037,80 @@
       letter-spacing: -.018em;
     }
 
+    .pricing {
+      position: relative;
+      isolation: isolate;
+      background: hsl(var(--bg));
+    }
+
+    .pricing::after {
+      position: absolute;
+      inset: auto 0 0;
+      height: 1px;
+      content: "";
+      background: linear-gradient(90deg, transparent, hsl(var(--line) / .16), transparent);
+    }
+
+    .pricing__layout {
+      display: grid;
+      justify-items: center;
+      gap: clamp(36px, 6vw, 72px);
+    }
+
+    .pricing__head {
+      text-align: center;
+      max-width: 900px;
+    }
+
+    .pricing__head h2 {
+      max-width: 520px;
+      margin-inline: auto;
+    }
+
+    .pricing__head .lines {
+      justify-items: center;
+      margin-inline: auto;
+    }
+
+    .pricing__list {
+      width: 100%;
+      max-width: 1040px;
+      border-top: 1px solid hsl(var(--line) / .22);
+    }
+
+    .pricing__row {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(18px, 3vw, 44px);
+      min-height: 118px;
+      border-bottom: 1px solid hsl(var(--line) / .22);
+      transition: background-color .28s var(--ease-soft), transform .28s var(--ease-soft);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .pricing__row:hover {
+        background: hsl(var(--line) / .03);
+        transform: translateX(4px);
+      }
+    }
+
+    .pricing__index {
+      align-self: start;
+      padding-top: 29px;
+      color: hsl(var(--muted) / .68);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pricing__line {
+      display: block;
+      height: 1px;
+      background: linear-gradient(90deg, hsl(var(--accent) / .56), hsl(var(--line) / .12));
+    }
+
     .contact__grid {
       display: grid;
       grid-template-columns: minmax(0, 1.05fr) minmax(280px, .58fr);
@@ -969,6 +1123,13 @@
       gap: 22px;
       max-width: 560px;
       margin-top: 42px;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
     }
 
     .contact-form__row {
@@ -1002,7 +1163,7 @@
       font: inherit;
       font-size: 15px;
       resize: vertical;
-      transition: border-color .16s var(--ease-out), background-color .16s var(--ease-out);
+      transition: border-color .16s var(--ease-out), background-color .16s var(--ease-out), box-shadow .16s var(--ease-out);
     }
 
     .field textarea {
@@ -1024,6 +1185,7 @@
       outline: none;
       border-color: hsl(var(--accent) / .8);
       background: hsl(var(--line) / .06);
+      box-shadow: 0 0 0 4px hsl(var(--accent) / .06);
     }
 
     .field input:focus-visible,
@@ -1063,7 +1225,14 @@
       font-weight: 700;
       letter-spacing: .18em;
       text-transform: uppercase;
-      transition: transform .18s var(--ease-out), background-color .18s var(--ease-out), box-shadow .18s var(--ease-out);
+      transition: transform .18s var(--ease-out), background-color .18s var(--ease-out), box-shadow .18s var(--ease-out), border-color .18s var(--ease-out);
+    }
+
+    .button--ghost {
+      border-color: hsl(var(--line) / .18);
+      background: hsl(var(--line) / .04);
+      box-shadow: inset 0 1px 0 hsl(0 0% 100% / .04);
+      color: hsl(var(--text));
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -1071,6 +1240,12 @@
         transform: translateY(-1px);
         background: hsl(var(--surface));
         box-shadow: var(--shadow-lg), inset 0 1px 0 hsl(0 0% 100% / .5);
+      }
+
+      .button--ghost:hover {
+        border-color: hsl(var(--accent) / .42);
+        background: hsl(var(--line) / .08);
+        box-shadow: var(--shadow-sm), inset 0 1px 0 hsl(0 0% 100% / .06);
       }
     }
 
@@ -1084,11 +1259,16 @@
       display: grid;
       gap: 20px;
       align-content: start;
+      justify-content: end;
       color: hsl(var(--muted));
       font-size: 13px;
     }
 
     .instagram-card {
+      --lift: 0px;
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      --scale: 1;
       position: relative;
       display: block;
       min-height: clamp(420px, 44vw, 620px);
@@ -1097,7 +1277,9 @@
       border-radius: var(--radius);
       color: hsl(var(--text));
       isolation: isolate;
-      transition: transform .22s var(--ease-out), border-color .22s var(--ease-out), box-shadow .22s var(--ease-out);
+      transform-style: preserve-3d;
+      transform: translate3d(0, var(--lift), 0) perspective(1200px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) scale(var(--scale));
+      transition: transform .32s var(--ease-soft), border-color .22s var(--ease-out), box-shadow .22s var(--ease-out);
     }
 
     .instagram-card:active {
@@ -1193,9 +1375,10 @@
 
     @media (hover: hover) and (pointer: fine) {
       .instagram-card:hover {
-        transform: translateY(-3px);
         border-color: hsl(var(--line) / .24);
         box-shadow: var(--shadow-lg);
+        --lift: -4px;
+        --scale: 1.01;
       }
 
       .instagram-card:hover img {
@@ -1367,10 +1550,15 @@
 
     .reveal-ready [data-reveal],
     .reveal-ready .work,
-    .reveal-ready [data-hero] > *,
-    .reveal-ready .hero__texture {
+    .reveal-ready [data-hero] > * {
       opacity: 0;
       will-change: transform, opacity;
+      filter: blur(10px);
+    }
+
+    .reveal-ready .hero__texture {
+      opacity: 0;
+      will-change: opacity;
     }
 
     @media (max-width: 840px) {
@@ -1389,9 +1577,18 @@
       .section__head,
       .about,
       .process,
+      .pricing__layout,
       .contact__grid,
       .contact-form__row {
         grid-template-columns: 1fr;
+      }
+
+      .pricing__head {
+        position: static;
+      }
+
+      .pricing__index {
+        padding-top: 25px;
       }
 
       .about__image img {
@@ -1400,6 +1597,28 @@
 
       .process__item {
         padding: 28px 0;
+      }
+
+      .gallery-controls {
+        display: grid;
+        grid-template-columns: 48px 48px minmax(0, 1fr) auto;
+        gap: 10px;
+      }
+
+      .gallery-hint {
+        display: none;
+      }
+
+      .gallery-count {
+        grid-column: 4;
+        margin-left: 0;
+      }
+
+      .gallery-progress {
+        grid-column: 3;
+        grid-row: 1;
+        width: 100%;
+        min-width: 0;
       }
 
       .lightbox {
@@ -1427,6 +1646,36 @@
       .section {
         padding: 76px 0;
       }
+
+      .gallery-controls {
+        grid-template-columns: 42px 42px minmax(40px, 1fr) auto;
+        gap: 8px;
+      }
+
+      .gallery-arrow {
+        width: 42px;
+        height: 42px;
+      }
+
+      .contact-actions {
+        display: grid;
+      }
+
+      .contact-actions .button {
+        width: 100%;
+        padding-inline: 18px;
+      }
+
+      .pricing__row {
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 12px;
+        min-height: 92px;
+      }
+
+      .pricing__index {
+        padding-top: 22px;
+      }
+
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1443,6 +1692,11 @@
       .reveal-ready .work {
         opacity: 1;
         transform: none;
+        filter: none;
+      }
+
+      .reveal-ready .hero__texture {
+        opacity: 1;
       }
     }
   </style>
@@ -1455,6 +1709,7 @@
         <a href="#o-mnie">O mnie</a>
         <a href="#galeria">Realizacje</a>
         <a href="#zamowienia">Zamówienia</a>
+        <a href="#cennik">Cennik</a>
         <a href="#kontakt">Kontakt</a>
       </div>
       <button class="nav__toggle" type="button" data-menu-open aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav" aria-label="Otwórz menu">
@@ -1476,6 +1731,7 @@
         <a href="#o-mnie">O mnie</a>
         <a href="#galeria">Realizacje</a>
         <a href="#zamowienia">Zamówienia</a>
+        <a href="#cennik">Cennik</a>
         <a href="#kontakt">Kontakt</a>
       </nav>
     </div>
@@ -1535,7 +1791,7 @@
         <div class="gallery-controls" data-reveal>
           <button class="gallery-arrow" type="button" data-carousel-prev aria-label="Poprzednie prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
           <button class="gallery-arrow" type="button" data-carousel-next aria-label="Następne prace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-          <p class="gallery-hint" data-carousel-hint><span class="gallery-hint__dot"></span>Przeciągnij, aby zobaczyć więcej</p>
+          <p class="gallery-hint" data-carousel-hint><span class="gallery-hint__dot"></span>Przesuń galerię</p>
           <p class="gallery-count"><span data-carousel-index>01</span><span class="gallery-count__sep">/</span><span data-carousel-total>09</span></p>
           <div class="gallery-progress" role="presentation"><span data-carousel-progress></span></div>
         </div>
@@ -1550,20 +1806,45 @@
           <div class="lines" data-lines><span></span><span></span><span></span></div>
         </div>
         <div class="process" aria-label="Proces zamówienia" data-reveal>
-          <div class="process__item">
+          <div class="process__item" data-reveal>
             <span class="process__step">01</span>
             <strong>Rozmowa</strong>
             <div class="lines lines--tight" data-lines><span></span><span></span></div>
           </div>
-          <div class="process__item">
+          <div class="process__item" data-reveal>
             <span class="process__step">02</span>
             <strong>Kompozycja</strong>
             <div class="lines lines--tight" data-lines><span></span><span></span></div>
           </div>
-          <div class="process__item">
+          <div class="process__item" data-reveal>
             <span class="process__step">03</span>
             <strong>Realizacja</strong>
             <div class="lines lines--tight" data-lines><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pricing" id="cennik" aria-labelledby="pricing-title">
+      <div class="pricing__layout page-shell">
+        <header class="pricing__head" data-reveal>
+          <p class="section__label">Cennik</p>
+          <h2 id="pricing-title">Trzy formaty<br>dla Twojego wnętrza</h2>
+          <div class="lines" data-lines><span></span><span></span><span></span></div>
+        </header>
+
+        <div class="pricing__list" data-reveal aria-label="Cennik obrazów">
+          <div class="pricing__row" data-reveal>
+            <span class="pricing__index">01</span>
+            <span class="pricing__line" aria-hidden="true"></span>
+          </div>
+          <div class="pricing__row" data-reveal>
+            <span class="pricing__index">02</span>
+            <span class="pricing__line" aria-hidden="true"></span>
+          </div>
+          <div class="pricing__row" data-reveal>
+            <span class="pricing__index">03</span>
+            <span class="pricing__line" aria-hidden="true"></span>
           </div>
         </div>
       </div>
@@ -1573,8 +1854,13 @@
       <div class="contact__grid page-shell" data-reveal>
         <div>
           <p class="section__label">Kontakt</p>
-          <h2 id="contact-title">Obrazy na zamówienie -> DM</h2>
+          <h2 id="contact-title">Zamów obraz do swojego wnętrza</h2>
           <div class="lines" data-lines><span></span><span></span><span></span></div>
+
+          <div class="contact-actions" aria-label="Szybki kontakt">
+            <a class="button" href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer">Napisz na Instagramie</a>
+            <a class="button button--ghost" href="mailto:kontakt@beatap.atelier">Wyślij e-mail</a>
+          </div>
 
           <form class="contact-form" data-contact-form novalidate>
             <div class="contact-form__row">
@@ -1597,7 +1883,7 @@
         </div>
 
         <div class="contact__details">
-          <a class="instagram-card" href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer" aria-label="Instagram beatap.atelier">
+          <a class="instagram-card" data-reveal href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer" aria-label="Instagram beatap.atelier">
             <img src="logo.png" alt="Logo beatap.atelier" loading="lazy" decoding="async">
             <span class="instagram-card__content">
               <span class="instagram-card__icon" aria-hidden="true">
@@ -1674,9 +1960,11 @@
     const mobileNav = document.querySelector('.mobile-nav')
     const mobileNavBackdrop = document.querySelector('[data-menu-backdrop]')
     const mobileNavLinks = document.querySelectorAll('.mobile-nav__links a')
+    const instagramCard = document.querySelector('.instagram-card')
     let activeIndex = 0
     let lastFocusedElement = null
     let lastFocusedNavToggle = null
+    const supportsFineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
     const parallaxItems = document.querySelectorAll('[data-parallax]')
 
@@ -1697,6 +1985,24 @@
         heroTexture.style.setProperty('--parallax', `${window.scrollY * .13}px`)
       }
       if (!prefersReducedMotion) syncParallax()
+    }
+
+    const setCardTilt = (element, event, lift = '-4px') => {
+      const rect = element.getBoundingClientRect()
+      const x = (event.clientX - rect.left) / rect.width
+      const y = (event.clientY - rect.top) / rect.height
+      const rotateY = (x - .5) * 8
+      const rotateX = (.5 - y) * 6
+      element.style.setProperty('--tilt-x', `${rotateY.toFixed(2)}deg`)
+      element.style.setProperty('--tilt-y', `${rotateX.toFixed(2)}deg`)
+      element.style.setProperty('--lift', lift)
+    }
+
+    const resetCardTilt = element => {
+      element.style.setProperty('--tilt-x', '0deg')
+      element.style.setProperty('--tilt-y', '0deg')
+      element.style.setProperty('--lift', '0px')
+      element.style.setProperty('--scale', '1')
     }
 
     const track = document.querySelector('[data-track]')
@@ -1783,13 +2089,17 @@
       track.scrollBy({ left: direction * step() * 1.5, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
     }
 
+    const updateLightboxDetails = work => {
+      lightboxImage.src = work.dataset.src
+      lightboxImage.alt = work.querySelector('img').alt
+      lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
+    }
+
     const swapImage = direction => {
       const work = works[activeIndex]
       const shift = direction === 0 ? 0 : direction * 40
       if (prefersReducedMotion) {
-        lightboxImage.src = work.dataset.src
-        lightboxImage.alt = work.querySelector('img').alt
-        lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
+        updateLightboxDetails(work)
         return
       }
       anime({
@@ -1800,9 +2110,7 @@
         duration: 220,
         easing: 'easeInQuad',
         complete: () => {
-          lightboxImage.src = work.dataset.src
-          lightboxImage.alt = work.querySelector('img').alt
-          lightboxCount.textContent = `${activeIndex + 1} / ${works.length}`
+          updateLightboxDetails(work)
           anime({
             targets: lightboxImage,
             opacity: [0, 1],
@@ -1895,11 +2203,23 @@
 
     const easeSoft = 'cubicBezier(.16,1,.3,1)'
 
+    if (!prefersReducedMotion && supportsFineHover) {
+      ;[...cards, instagramCard].filter(Boolean).forEach(element => {
+        element.addEventListener('pointermove', event => setCardTilt(element, event))
+        element.addEventListener('pointerleave', () => resetCardTilt(element))
+        element.addEventListener('blur', () => resetCardTilt(element))
+        element.addEventListener('pointerenter', () => {
+          element.style.setProperty('--scale', '1.01')
+        })
+      })
+    }
+
     if (!prefersReducedMotion) {
       anime({
         targets: heroItems,
         opacity: [0, 1],
-        translateY: [34, 0],
+        translateY: [28, 0],
+        scale: [.98, 1],
         filter: ['blur(10px)', 'blur(0px)'],
         delay: anime.stagger(140, { start: 150 }),
         duration: 1400,
@@ -1908,6 +2228,7 @@
       anime({
         targets: heroTexture,
         opacity: [0, 1],
+        filter: ['blur(10px)', 'blur(0px)'],
         duration: 1800,
         easing: 'easeOutQuad'
       })
@@ -1915,24 +2236,7 @@
 
     const typewriterEl = document.querySelector('[data-typewriter]')
     if (typewriterEl) {
-      const fullText = typewriterEl.textContent
-      if (prefersReducedMotion) {
-        typewriterEl.textContent = fullText
-      } else {
-        typewriterEl.textContent = ''
-        typewriterEl.classList.add('is-typing')
-        let charIndex = 0
-        const typeNextChar = () => {
-          charIndex++
-          typewriterEl.textContent = fullText.slice(0, charIndex)
-          if (charIndex < fullText.length) {
-            window.setTimeout(typeNextChar, 42)
-          } else {
-            typewriterEl.classList.remove('is-typing')
-          }
-        }
-        window.setTimeout(typeNextChar, 250)
-      }
+      typewriterEl.classList.remove('is-typing')
     }
 
     const revealObserver = new IntersectionObserver(entries => {
@@ -1947,6 +2251,8 @@
           targets: entry.target,
           opacity: [0, 1],
           translateY: [40, 0],
+          scale: [.98, 1],
+          filter: ['blur(10px)', 'blur(0px)'],
           duration: 1100,
           easing: easeSoft
         })
@@ -1965,8 +2271,9 @@
         anime({
           targets: entry.target,
           opacity: [0, 1],
-          translateX: [72, 0],
-          scale: [.94, 1],
+          translateY: [28, 0],
+          scale: [.96, 1],
+          filter: ['blur(10px)', 'blur(0px)'],
           duration: 1250,
           delay: Math.min(revealedCards++, 4) * 95,
           easing: easeSoft
