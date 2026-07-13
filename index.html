@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&display=swap" rel="stylesheet">
-  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="icon" href="favicon.png" type="image/png">
   <style>
     :root {
       --bg: 210 9% 6%;
@@ -461,8 +461,14 @@
     }
 
     h2 {
-      max-width: 850px;
-      font-size: clamp(38px, 6.6vw, 92px);
+      width: min(100%, 760px);
+      max-width: none;
+      margin-inline: auto;
+      color: hsl(var(--accent));
+      text-align: center;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.04;
+      letter-spacing: -.032em;
     }
 
     h3 {
@@ -535,9 +541,9 @@
     .section--warm {
       position: relative;
       isolation: isolate;
-      color: hsl(var(--primary));
+      color: hsl(var(--text));
       background:
-        radial-gradient(120% 90% at 78% 8%, hsl(var(--surface)) 0%, hsl(var(--surface-deep)) 100%);
+        radial-gradient(110% 100% at 76% 10%, hsl(35 10% 17%) 0%, hsl(210 8% 8%) 68%, hsl(var(--bg)) 100%);
     }
 
     .section--warm::before {
@@ -546,9 +552,9 @@
       z-index: -1;
       content: "";
       pointer-events: none;
-      opacity: .5;
+      opacity: .32;
       background-image:
-        linear-gradient(hsl(var(--primary) / .05) 1px, transparent 1px);
+        linear-gradient(hsl(var(--text) / .045) 1px, transparent 1px);
       background-size: 100% 46px;
       mask-image: radial-gradient(80% 60% at 50% 50%, #000 0%, transparent 78%);
     }
@@ -563,17 +569,18 @@
 
     .section__head {
       display: grid;
-      grid-template-columns: minmax(140px, .32fr) minmax(0, 1fr);
-      gap: clamp(28px, 8vw, 120px);
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 16px;
       margin-bottom: clamp(44px, 7vw, 86px);
-      align-items: end;
+      text-align: center;
     }
 
     .section__label {
-      margin: .72em 0 0;
+      margin: 0 0 14px;
       color: currentColor;
       opacity: .62;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: .18em;
       text-transform: uppercase;
@@ -581,16 +588,24 @@
 
     .about {
       display: grid;
-      grid-template-columns: minmax(0, .88fr) minmax(320px, .72fr);
-      align-items: center;
+      grid-template-columns: 1fr;
+      justify-items: center;
       gap: clamp(34px, 7vw, 100px);
     }
 
     .about__text {
-      max-width: 650px;
+      width: min(100%, 900px);
+      max-width: none;
+      text-align: center;
+    }
+
+    .about__text .lines {
+      justify-items: center;
+      margin-inline: auto;
     }
 
     .about__image {
+      width: min(100%, 760px);
       position: relative;
       margin: 0;
       overflow: hidden;
@@ -602,7 +617,7 @@
 
     .about__image img {
       width: 100%;
-      height: clamp(440px, 58vw, 720px);
+      height: clamp(420px, 56vw, 680px);
       object-fit: cover;
       filter: saturate(.82) contrast(1.02);
       transform: scale(1.16) translateY(var(--parallax-y, 0));
@@ -1592,7 +1607,22 @@
       }
 
       .about__image img {
-        height: min(126vw, 620px);
+        height: min(104vw, 520px);
+      }
+
+      .about {
+        gap: 38px;
+      }
+
+      .reveal-ready #o-mnie [data-reveal] {
+        opacity: 1;
+        filter: none;
+        transform: none;
+        will-change: auto;
+      }
+
+      #o-mnie .lines span {
+        clip-path: inset(0 0 0 0);
       }
 
       .process__item {
@@ -1644,7 +1674,29 @@
 
     @media (max-width: 520px) {
       .section {
-        padding: 76px 0;
+        padding: 62px 0;
+      }
+
+      .section__head {
+        gap: 18px;
+        margin-bottom: 36px;
+      }
+
+      .lines {
+        gap: 11px;
+        margin-top: 22px;
+      }
+
+      .commission {
+        gap: 40px;
+      }
+
+      .process__item {
+        padding: 22px 0;
+      }
+
+      .process__step {
+        margin-bottom: 14px;
       }
 
       .gallery-controls {
@@ -1669,11 +1721,42 @@
       .pricing__row {
         grid-template-columns: 28px minmax(0, 1fr);
         gap: 12px;
-        min-height: 92px;
+        min-height: 76px;
       }
 
       .pricing__index {
-        padding-top: 22px;
+        padding-top: 17px;
+      }
+
+      .contact__grid {
+        gap: 44px;
+      }
+
+      .contact-actions {
+        margin-top: 28px;
+      }
+
+      .contact-form {
+        gap: 17px;
+        margin-top: 30px;
+      }
+
+      .contact-form__row {
+        gap: 17px;
+      }
+
+      .instagram-card {
+        min-height: 340px;
+      }
+
+      h2 {
+        font-size: 34px;
+        line-height: 1.06;
+      }
+
+      .section__label {
+        margin-bottom: 10px;
+        font-size: 10px;
       }
 
     }
@@ -1743,7 +1826,7 @@
       <h1 id="hero-title" class="sr-only">beatap.atelier — Malarstwo współczesne Abstrakcje</h1>
       <div class="hero__inner" data-hero>
         <div class="hero__brand">
-          <img class="hero__mark" src="logo.png" alt="Monogram BP">
+          <img class="hero__mark" src="logo-optimized.jpg" alt="Monogram BP">
           <span class="hero__brand-name">beatap.atelier</span>
         </div>
         <p class="hero__eyebrow" data-typewriter>Malarstwo współczesne Abstrakcje</p>
@@ -1884,7 +1967,7 @@
 
         <div class="contact__details">
           <a class="instagram-card" data-reveal href="https://www.instagram.com/beatap.atelier/" target="_blank" rel="noreferrer" aria-label="Instagram beatap.atelier">
-            <img src="logo.png" alt="Logo beatap.atelier" loading="lazy" decoding="async">
+            <img src="logo-optimized.jpg" alt="Logo beatap.atelier" loading="lazy" decoding="async">
             <span class="instagram-card__content">
               <span class="instagram-card__icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
@@ -1942,7 +2025,8 @@
     })()
     const nav = document.querySelector('.nav')
     const heroTexture = document.querySelector('.hero__texture')
-    const revealItems = document.querySelectorAll('[data-reveal]')
+    const isMobileLayout = window.matchMedia('(max-width: 840px)').matches
+    const revealItems = [...document.querySelectorAll('[data-reveal]')].filter(item => !(isMobileLayout && item.closest('#o-mnie')))
     const heroItems = document.querySelectorAll('[data-hero] > *')
     const works = [...document.querySelectorAll('.work')]
     works.forEach((work, index) => { work.dataset.index = index })
@@ -2235,8 +2319,21 @@
     }
 
     const typewriterEl = document.querySelector('[data-typewriter]')
-    if (typewriterEl) {
-      typewriterEl.classList.remove('is-typing')
+    if (typewriterEl && !prefersReducedMotion) {
+      const typewriterText = typewriterEl.textContent.trim()
+      let typewriterIndex = 0
+      typewriterEl.textContent = ''
+      typewriterEl.setAttribute('aria-label', typewriterText)
+      typewriterEl.classList.add('is-typing')
+      const typeNextCharacter = () => {
+        typewriterEl.textContent = typewriterText.slice(0, ++typewriterIndex)
+        if (typewriterIndex < typewriterText.length) {
+          window.setTimeout(typeNextCharacter, typewriterText[typewriterIndex] === ' ' ? 110 : 58)
+          return
+        }
+        window.setTimeout(() => typewriterEl.classList.remove('is-typing'), 900)
+      }
+      window.setTimeout(typeNextCharacter, 720)
     }
 
     const revealObserver = new IntersectionObserver(entries => {
