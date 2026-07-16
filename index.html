@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e0f11">
   <meta name="description" content="beatap.atelier - malarstwo współczesne, abstrakcje i teksturowane obrazy tworzone na zamówienie.">
   <title>beatap.atelier - Malarstwo współczesne</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,6 +43,7 @@
 
     html {
       scroll-behavior: smooth;
+      scrollbar-gutter: stable;
       background: hsl(var(--bg));
     }
 
@@ -216,6 +218,15 @@
     }
 
     .nav__links a:focus-visible::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav__links a[aria-current] {
+      color: hsl(var(--text));
+    }
+
+    .nav__links a[aria-current]::after {
       transform: scaleX(1);
       transform-origin: left;
     }
@@ -571,7 +582,7 @@
       inset: auto 0 0;
       height: 1px;
       content: "";
-      background: linear-gradient(90deg, transparent, hsl(var(--primary) / .16), transparent);
+      background: linear-gradient(90deg, transparent, hsl(var(--line) / .16), transparent);
     }
 
     .section__head {
@@ -780,10 +791,12 @@
       transition: transform .55s var(--ease-soft), border-color .4s var(--ease-soft), background-color .4s var(--ease-soft), opacity .4s var(--ease-soft);
     }
 
-    .gallery-arrow:hover {
-      transform: scale(1.09);
-      border-color: hsl(var(--line) / .38);
-      background: hsl(var(--line) / .06);
+    @media (hover: hover) and (pointer: fine) {
+      .gallery-arrow:hover {
+        transform: scale(1.09);
+        border-color: hsl(var(--line) / .38);
+        background: hsl(var(--line) / .06);
+      }
     }
 
     .gallery-arrow:active {
@@ -1185,7 +1198,7 @@
       box-shadow: inset 0 1px 0 hsl(0 0% 100% / .03);
       color: hsl(var(--text));
       font: inherit;
-      font-size: 15px;
+      font-size: 16px;
       resize: vertical;
       transition: border-color .16s var(--ease-out), background-color .16s var(--ease-out), box-shadow .16s var(--ease-out);
     }
@@ -1430,6 +1443,7 @@
 
     .contact__email {
       justify-self: start;
+      padding-block: 8px;
       color: hsl(var(--muted));
       font-size: 12px;
       letter-spacing: .06em;
@@ -1466,7 +1480,7 @@
       padding: clamp(18px, 3vw, 38px);
       opacity: 0;
       pointer-events: none;
-      background: hsl(var(--bg) / .94);
+      background: hsl(var(--bg) / .97);
       backdrop-filter: blur(22px);
       transition: opacity .32s var(--ease-soft);
     }
@@ -1474,6 +1488,11 @@
     .lightbox.is-open {
       opacity: 1;
       pointer-events: auto;
+    }
+
+    body:has(.lightbox.is-open) .nav {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .lightbox__bar {
@@ -1823,7 +1842,7 @@
 
   <main>
     <section class="hero" id="start" aria-labelledby="hero-title">
-      <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true">
+      <img class="hero__texture" src="Zdjęcie w sekcji Start.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
       <h1 id="hero-title" class="sr-only">beatap.atelier — Malarstwo współczesne Abstrakcje</h1>
       <div class="hero__inner" data-hero>
         <div class="hero__brand">
@@ -1839,6 +1858,7 @@
 
             const typewriterText = typewriterEl.textContent.trim()
             let typewriterIndex = 0
+            typewriterEl.style.minHeight = `${typewriterEl.getBoundingClientRect().height}px`
             typewriterEl.textContent = ''
             typewriterEl.setAttribute('aria-label', typewriterText)
             typewriterEl.classList.add('is-typing')
@@ -2441,6 +2461,19 @@
     }, { threshold: .3 })
 
     document.querySelectorAll('[data-lines]').forEach(group => linesObserver.observe(group))
+
+    const navLinks = [...document.querySelectorAll('.nav__links a')]
+    const sectionByLink = new Map(navLinks.map(link => [document.querySelector(link.getAttribute('href')), link]))
+    const spyObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return
+        const link = sectionByLink.get(entry.target)
+        if (!link) return
+        navLinks.forEach(item => item.removeAttribute('aria-current'))
+        link.setAttribute('aria-current', 'true')
+      })
+    }, { rootMargin: '-40% 0px -55% 0px' })
+    sectionByLink.forEach((link, section) => { if (section) spyObserver.observe(section) })
     closeButton.addEventListener('click', closeLightbox)
     prevButton.addEventListener('click', () => showWork(activeIndex - 1, -1))
     nextButton.addEventListener('click', () => showWork(activeIndex + 1, 1))
@@ -2494,6 +2527,10 @@
     lightboxStage.addEventListener('pointercancel', endStageDrag)
     contactForm.addEventListener('submit', event => {
       event.preventDefault()
+      if (!contactForm.checkValidity()) {
+        contactForm.reportValidity()
+        return
+      }
       contactFormNote.hidden = false
       contactForm.reset()
     })
